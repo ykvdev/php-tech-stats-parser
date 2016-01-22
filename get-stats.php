@@ -77,4 +77,4 @@ file_put_contents(__DIR__ . '/results/last-ignored-words.txt', implode(PHP_EOL, 
 $filePath = __DIR__ . '/results/' . date('Y') . '-stats.json';
 $yearStats = @json_decode(file_get_contents($filePath), true);
 $yearStats[date('m')] = $stats;
-file_put_contents($filePath, json_encode($stats));
+file_put_contents($filePath, json_encode($yearStats));

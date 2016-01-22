@@ -42,13 +42,12 @@ return [
         'Volt' => ['volt'],
     ],
 
-    'Frontend (JS/CSS/HTML)' => [
+    'Frontend' => [
         'jQuery' => ['jquery'],
         'Bootstrap' => ['bootstrap'],
         'Angular' => ['angular'],
         'Bower' => ['bower'],
         'TypeScript' => ['typescript', 'type\s+script'],
-        'NPM' => ['npm'],
         'LESS' => ['less'],
         'SASS' => ['sass'],
         'Gulp' => ['gulp'],
@@ -100,7 +99,7 @@ return [
         'Subversion' => ['subversion', 'svn']
     ],
 
-    'Серверные технологии' => [
+    'Сервер' => [
         'Bash' => ['bash', 'shh', 'shell'],
         'LAMP' => ['lamp'],
         'WAMP' => ['wamp'],
@@ -123,7 +122,7 @@ return [
         'Doctrine' => ['doctrine'],
         'Composer' => ['composer'],
         'RegExp' => ['regexp'],
-        'Node.js' => ['node.js', 'nodejs', 'node\s+js'],
+        'Node.js' => ['node.js', 'nodejs', 'node\s+js', 'npm'],
         'ООП' => ['oop', 'ооп', 'object orientated'],
         'MVC' => ['mvc'],
         'PSR' => ['psr'],
@@ -176,7 +175,7 @@ return [
         ],
     ],
 
-    'Методологии разработки' => [
+    'Методологии' => [
         'Agile' => ['agile'],
         'Scrum' => ['scrum'],
         'kanban' => ['kanban'],
