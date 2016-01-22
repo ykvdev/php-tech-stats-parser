@@ -1,0 +1,7 @@
+{
+    "require": {
+        "olamedia/nokogiri": "~1.0",
+        "dmelo/pchart": "~2.1",
+        "behat/transliterator": "~1.1"
+    }
+}
