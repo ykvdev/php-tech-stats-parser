@@ -178,6 +178,6 @@ return [
     'Методологии разработки' => [
         'Agile' => ['agile'],
         'Scrum' => ['scrum'],
-        'kanban' => ['kanban'],
+        'Kanban' => ['kanban'],
     ],
 ];
