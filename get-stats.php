@@ -59,7 +59,9 @@ while(true) {
 }
 
 foreach($stats as &$techs) {
-    arsort($techs);
+    if(is_array($techs)) {
+        arsort($techs);
+    }
 }
 
 function getPage($url) {
