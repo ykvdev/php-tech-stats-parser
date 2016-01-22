@@ -58,6 +58,10 @@ while(true) {
     $currPage++;
 }
 
+foreach($stats as &$techs) {
+    arsort($techs);
+}
+
 function getPage($url) {
     for($i = 1; $i <= 5; $i++) {
         sleep(mt_rand(0, 5));

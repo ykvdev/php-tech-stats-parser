@@ -99,7 +99,7 @@ return [
         'Subversion' => ['subversion', 'svn']
     ],
 
-    'Сервер' => [
+    'Серверные технологии' => [
         'Bash' => ['bash', 'shh', 'shell'],
         'LAMP' => ['lamp'],
         'WAMP' => ['wamp'],
@@ -175,7 +175,7 @@ return [
         ],
     ],
 
-    'Методологии' => [
+    'Методологии разработки' => [
         'Agile' => ['agile'],
         'Scrum' => ['scrum'],
         'kanban' => ['kanban'],
