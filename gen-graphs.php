@@ -51,7 +51,7 @@ function genBarGraph($category, $techsStats) {
 
     /* Draw the chart scale */
     $myPicture->setGraphArea(150,50,580,480);
-    $myPicture->drawScale(array("CycleBackground"=>TRUE,"DrawSubTicks"=>false,"GridR"=>0,"GridG"=>0,"GridB"=>0,"GridAlpha"=>10,"Pos"=>SCALE_POS_TOPBOTTOM)); //
+    $myPicture->drawScale(array("CycleBackground"=>TRUE,"DrawSubTicks"=>false,"GridR"=>0,"GridG"=>0,"GridB"=>0,"GridAlpha"=>10,"Pos"=>SCALE_POS_TOPBOTTOM,"Mode"=>SCALE_MODE_START0));
 
     /* Turn on shadow computing */
     $myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
