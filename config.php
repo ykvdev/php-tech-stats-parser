@@ -43,7 +43,6 @@ return [
     ],
 
     'Frontend' => [
-        'jQuery' => ['jquery'],
         'Bootstrap' => ['bootstrap'],
         'Angular' => ['angular'],
         'Bower' => ['bower'],
@@ -65,12 +64,16 @@ return [
         'ECMAScript' => ['ecmascript'],
         'Dojo' => ['dojo'],
         'Meteor.js' => ['meteor'],
+        'Jade' => ['jade'],
+        'Stylus' => ['stylus'],
+        'PostCSS' => ['postcss'],
+        'БЭМ' => ['бэм'],
+        'RequireJS' => ['Require\s*JS'],
     ],
 
     'Databases' => [
-        'MySQL' => ['mysql', 'sql'],
         'PostgreSQL' => ['postgre'],
-        'MongoDB' => ['mongodb'],
+        'MongoDB' => ['mongo'],
         'Redis' => ['redis'],
         'Memcache' => ['memcache'],
         'MariaDB' => ['mariadb', 'maria\s+db'],
@@ -81,7 +84,7 @@ return [
     ],
 
     'Очереди' => [
-        'Rabbit MQ' => ['rabbit\s+mq'],
+        'Rabbit MQ' => ['rabbit\s*mq'],
         'Beanstalk' => ['beanstalk'],
         'Gearman' => ['gearman'],
     ],
@@ -113,6 +116,9 @@ return [
         'Vagrant' => ['vagrant'],
         'AWS' => ['aws'],
         'Heroku' => ['heroku'],
+        'Supervisor' => ['supervisor'],
+        'OpenVZ' => ['openvz'],
+        'Capistrano' => ['capistrano'],
     ],
 
     'Прочее' => [
@@ -138,13 +144,20 @@ return [
         'BDD' => ['bdd'],
         'Xdebug' => ['xdebug'],
         'SEO' => ['seo'],
+        'SPL' => ['spl'],
+        'WebRTC' => ['web\s*rtc'],
+        'Flash' => ['flash'],
+        'Flex' => ['flex'],
+        'Photoshop' => ['photoshop'],
+        'SOLID' => ['solid'],
     ],
 
     'CI' => [
         'Bamboo' => ['bamboo'],
         'Stash' => ['stash'],
         'TeamCity' => ['teamcity', 'team\s+city'],
-        'Jenkins' => ['jenkins']
+        'Jenkins' => ['jenkins'],
+        'Phing' => ['phing'],
     ],
 
     'Issue trackers' => [
@@ -159,8 +172,6 @@ return [
     'Тестирование' => [
         'Selenium' => ['selenium', 'селениум'],
         'PHP Unit' => ['php\s+unit', 'phpunit'],
-        'Selendroid' => ['selendroid'],
-        'Appium' => ['appium'],
     ],
 
     'Должность' => [
