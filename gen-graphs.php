@@ -43,8 +43,8 @@ function genBarGraph($category, $techsStats) {
 
     /* Create the pChart object */
     $myPicture = new pImage(600,500,$MyData);
-    $myPicture->drawGradientArea(0,0,600,500,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
-    $myPicture->drawGradientArea(0,0,600,500,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
+//    $myPicture->drawGradientArea(0,0,600,500,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
+//    $myPicture->drawGradientArea(0,0,600,500,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
     $myPicture->setFontProperties(array("FontName"=>__DIR__ . '/Candara.ttf',"FontSize"=>10));
 
     $myPicture->drawText(20,30,$category,array("FontSize"=>13,"Align"=>TEXT_ALIGN_BOTTOMLEFT));
@@ -86,8 +86,8 @@ function genSplineGraph($category, $techsStats) {
 
     /* Create the pChart object */
     $myPicture = new pImage(710,260,$MyData);
-    $myPicture->drawGradientArea(0,0,710,260,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
-    $myPicture->drawGradientArea(0,0,710,260,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
+//    $myPicture->drawGradientArea(0,0,710,260,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
+//    $myPicture->drawGradientArea(0,0,710,260,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
 
     /* Write the chart title */
     $myPicture->setFontProperties(array("FontName"=>$font));

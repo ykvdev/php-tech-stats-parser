@@ -7,7 +7,7 @@ return [
         'Yii' => ['yii'],
         'CakePHP' => ['cakephp'],
         'Laravel' => ['laravel'],
-        'CodeIgniter' => ['codeigniter', 'code\s+igniter'],
+        'CodeIgniter' => ['codeigniter', 'code\s*igniter'],
         'Kohana' => ['kohana'],
         'Lararel' => ['lararel'],
         'Phalcon' => ['phalcon'],
@@ -16,7 +16,7 @@ return [
         'FuelPHP' => ['fuel'],
         'Slim' => ['slim'],
         'PHPixie' => ['phpixie'],
-        'Fat-Free' => ['fat-free', 'fatfree', 'fat\s+free'],
+        'Fat-Free' => ['fat-free', 'fatfree', 'fat\s*free'],
         'Lumen' => ['lumen'],
         'Lithium (li3)' => ['li3', 'lithium'],
     ],
@@ -29,24 +29,31 @@ return [
         'Joomla' => ['joomla'],
         'Magento' => ['magento'],
         'Bitrix' => ['bitrix'],
-        'OpenCart' => ['opencart', 'open\s+cart'],
+        'OpenCart' => ['opencart', 'open\s*cart'],
         'MODX' => ['modx'],
-        'NetCat' => ['netcat', 'net\s+cat'],
-        'DataLife Engine' => ['datalife', 'data\s+life'],
+        'NetCat' => ['netcat', 'net\s*cat'],
+        'DataLife Engine' => ['datalife', 'data\s*life'],
         'UMI.CMS' => ['umi']
+    ],
+
+    'PHP форумы' => [
+        'phpBB' => ['php\s*bb'],
+        'SMF' => ['smf'],
+        'Vbulletin' => ['v\s*bulletin'],
     ],
 
     'PHP шаблонизаторы' => [
         'Smarty' => ['smarty'],
         'Twig' => ['twig'],
         'Volt' => ['volt'],
+        'Blade' => ['blade'],
     ],
 
     'Frontend' => [
         'Bootstrap' => ['bootstrap'],
         'Angular' => ['angular'],
         'Bower' => ['bower'],
-        'TypeScript' => ['typescript', 'type\s+script'],
+        'TypeScript' => ['typescript', 'type\s*script'],
         'LESS' => ['less'],
         'SASS' => ['sass'],
         'Gulp' => ['gulp'],
@@ -59,8 +66,8 @@ return [
         'io.js' => ['io.js'],
         'SockJS' => ['sockjs'],
         'Underscore' => ['underscore'],
-        'ReactJS' => ['reactjs', 'react\s+js'],
-        'ExtJS' => ['extjs', 'ext\s+js'],
+        'ReactJS' => ['reactjs', 'react\s*js'],
+        'ExtJS' => ['extjs', 'ext\s*js'],
         'ECMAScript' => ['ecmascript'],
         'Dojo' => ['dojo'],
         'Meteor.js' => ['meteor'],
@@ -69,22 +76,28 @@ return [
         'PostCSS' => ['postcss'],
         'БЭМ' => ['бэм'],
         'RequireJS' => ['Require\s*JS'],
+        'CoffeeScript' => ['Coffee\s*Script'],
+        'Webpack' => ['webpack'],
     ],
 
     'Databases' => [
         'PostgreSQL' => ['postgre'],
+        'SQLite' => ['sqlite', 'sql\s*lite'],
+        'MSSQL' => ['mssql', 'ms\s*sql'],
         'MongoDB' => ['mongo'],
         'Redis' => ['redis'],
         'Memcache' => ['memcache'],
-        'MariaDB' => ['mariadb', 'maria\s+db'],
+        'MariaDB' => ['mariadb', 'maria\s*db'],
         'Tarantool' => ['tarantool'],
-        'ElasticSearch' => ['elasticsearch', 'elastic\s+search'],
+        'ElasticSearch' => ['elasticsearch', 'elastic\s*search'],
         'Cassandra' => ['cassandra'],
         'Oracle' => ['oracle'],
+        'RethinkDB' => ['Rethink\s*DB'],
     ],
 
     'Очереди' => [
-        'Rabbit MQ' => ['rabbit\s*mq'],
+        'RabbitMQ' => ['rabbit\s*mq'],
+        'ActiveMQ' => ['active\s*mq'],
         'Beanstalk' => ['beanstalk'],
         'Gearman' => ['gearman'],
     ],
@@ -119,6 +132,8 @@ return [
         'Supervisor' => ['supervisor'],
         'OpenVZ' => ['openvz'],
         'Capistrano' => ['capistrano'],
+        'Munin' => ['munin'],
+        'CouchDB' => ['couch\s*db'],
     ],
 
     'Прочее' => [
@@ -128,14 +143,14 @@ return [
         'Doctrine' => ['doctrine'],
         'Composer' => ['composer'],
         'RegExp' => ['regexp'],
-        'Node.js' => ['node.js', 'nodejs', 'node\s+js', 'npm'],
+        'Node.js' => ['node.js', 'nodejs', 'node\s*js', 'npm'],
         'ООП' => ['oop', 'ооп', 'object orientated'],
         'MVC' => ['mvc'],
         'PSR' => ['psr'],
         'Ruby' => ['ruby'],
         'Python' => ['python'],
         'Perl' => ['perl'],
-        'ActionScript' => ['actionscript', 'action\s+script'],
+        'ActionScript' => ['actionscript', 'action\s*script'],
         'Erlang' => ['erlang'],
         'Haskell' => ['haskell'],
         'Objective-C' => ['objective-c'],
@@ -150,14 +165,17 @@ return [
         'Flex' => ['flex'],
         'Photoshop' => ['photoshop'],
         'SOLID' => ['solid'],
+        'HHVM' => ['hhvm'],
+        'Varnish' => ['varnish'],
     ],
 
     'CI' => [
         'Bamboo' => ['bamboo'],
         'Stash' => ['stash'],
-        'TeamCity' => ['teamcity', 'team\s+city'],
+        'TeamCity' => ['teamcity', 'team\s*city'],
         'Jenkins' => ['jenkins'],
         'Phing' => ['phing'],
+        'Travis' => ['travis'],
     ],
 
     'Issue trackers' => [
@@ -171,7 +189,8 @@ return [
 
     'Тестирование' => [
         'Selenium' => ['selenium', 'селениум'],
-        'PHP Unit' => ['php\s+unit', 'phpunit'],
+        'PHP Unit' => ['php\s*unit', 'phpunit'],
+        'Codeception' => ['code\s*ception'],
     ],
 
     'Должность' => [
@@ -179,10 +198,10 @@ return [
         'Мидл' => ['middle', 'мидл', 'средний'],
         'Сеньер' => ['senior', 'сеньер', 'сеньёр', 'мастер'],
         'Тимлид' => [
-            'тимлид', 'тим-лид', 'тим\s+лид',
-            'техлид', 'тех-лид', 'тех\s+лид',
-            'teemlead', 'teem\s+lead', 'teem-lead',
-            'techlead', 'tech\s+lead', 'tech-lead',
+            'тимлид', 'тим-лид', 'тим\s*лид',
+            'техлид', 'тех-лид', 'тех\s*лид',
+            'teemlead', 'teem\s*lead', 'teem-lead',
+            'techlead', 'tech\s*lead', 'tech-lead',
         ],
     ],
 
