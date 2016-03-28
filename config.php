@@ -19,6 +19,7 @@ return [
         'Fat-Free' => ['fat-free', 'fatfree', 'fat\s*free'],
         'Lumen' => ['lumen'],
         'Lithium (li3)' => ['li3', 'lithium'],
+        'Zephir' => ['zephir'],
     ],
 
     'PHP CMS' => [
@@ -40,6 +41,13 @@ return [
         'phpBB' => ['php\s*bb'],
         'SMF' => ['smf'],
         'Vbulletin' => ['v\s*bulletin'],
+        'IPS' => ['IPS'],
+        'PunBB' => ['Pun\s*BB'],
+        'Vanilla' => ['vanilla'],
+        'Xenforo' => ['xenforo'],
+        'ExBB' => ['Ex\s*BB'],
+        'FluxBB' => ['Flux\s*BB'],
+        'Flarum' => ['flarum'],
     ],
 
     'PHP шаблонизаторы' => [
@@ -78,6 +86,7 @@ return [
         'RequireJS' => ['Require\s*JS'],
         'CoffeeScript' => ['Coffee\s*Script'],
         'Webpack' => ['webpack'],
+        'Comet' => ['Comet'],
     ],
 
     'Databases' => [
@@ -93,10 +102,13 @@ return [
         'Cassandra' => ['cassandra'],
         'Oracle' => ['oracle'],
         'RethinkDB' => ['Rethink\s*DB'],
+        'CouchDB' => ['couch\s*db'],
+        'Riak' => ['Riak'],
     ],
 
     'Очереди' => [
         'RabbitMQ' => ['rabbit\s*mq'],
+        'AMQP' => ['AMQP'],
         'ActiveMQ' => ['active\s*mq'],
         'Beanstalk' => ['beanstalk'],
         'Gearman' => ['gearman'],
@@ -133,7 +145,6 @@ return [
         'OpenVZ' => ['openvz'],
         'Capistrano' => ['capistrano'],
         'Munin' => ['munin'],
-        'CouchDB' => ['couch\s*db'],
     ],
 
     'Прочее' => [
