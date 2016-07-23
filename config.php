@@ -58,6 +58,7 @@ return [
     ],
 
     'Frontend' => [
+        'jQuery' => ['jquery'],
         'Bootstrap' => ['bootstrap'],
         'Angular' => ['angular'],
         'Bower' => ['bower'],
@@ -90,6 +91,7 @@ return [
     ],
 
     'Databases' => [
+        'MySQL' => ['mysql'],
         'PostgreSQL' => ['postgre'],
         'SQLite' => ['sqlite', 'sql\s*lite'],
         'MSSQL' => ['mssql', 'ms\s*sql'],
@@ -104,6 +106,7 @@ return [
         'RethinkDB' => ['Rethink\s*DB'],
         'CouchDB' => ['couch\s*db'],
         'Riak' => ['Riak'],
+        'HBase' => ['HBase'],
     ],
 
     'Очереди' => [
@@ -196,6 +199,21 @@ return [
         'Mantis' => ['mantis'],
         'Bugzilla' => ['bugzilla'],
         'Youtrack' => ['youtrack']
+    ],
+
+    'IDE' => [
+        'PHPStorm' => ['PHP\s*Storm'],
+        'NetBeans' => ['Net\s*Beans'],
+        'Eclipse' => ['Eclipse'],
+        'Aptana' => ['Aptana'],
+        'PHPDesigner' => ['PHP\s*Designer'],
+        'SublimeText' => ['Sublime'],
+        'Vim' => ['vim'],
+        'Notepad++' => ['Notepad\+\+'],
+        'ZendStudio' => ['Zend\s*Studio'],
+        'Dreamweaver' => ['Dream\s*weaver'],
+        'CodelobsterPHP' => ['Codelobster'],
+        'Komodo' => ['Komodo'],
     ],
 
     'Тестирование' => [
