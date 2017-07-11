@@ -55,7 +55,7 @@ class GetStatsHh extends Command
 
         $urls = [];
         (new Crawler($html))->filter(self::VACANCY_URLS_SELECTOR)->each(function(Crawler $node, $i) {
-            $links[] = $node->attr('href');
+            $urls[] = $node->attr('href');
         });
 
         return $urls;
