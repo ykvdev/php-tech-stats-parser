@@ -49,12 +49,53 @@ return [
         'Flarum' => 'flarum',
     ],
 
+    'Тестирование' => [
+        'Selenium' => 'selenium|селениум',
+        'PHP Unit' => 'php\W*unit',
+        'Codeception' => 'code\W*ception',
+    ],
+
     'PHP шаблонизаторы' => [
         'Smarty' => 'smarty',
         'Twig' => 'twig',
         'Volt' => 'volt',
         'Blade' => 'blade',
     ],
+
+    'DB' => [
+        'MySQL' => 'mysql',
+        'PostgreSQL' => 'postgre',
+        'SQLite' => 'sql\W*lite',
+        'MSSQL' => 'ms\W*sql',
+        'MongoDB' => 'mongo',
+        'Redis' => 'redis',
+        'MariaDB' => 'maria\W*db',
+        'Tarantool' => 'tarantool',
+        'ElasticSearch' => 'elastic\W*search',
+        'Cassandra' => 'cassandra',
+        'Oracle' => 'oracle',
+        'RethinkDB' => 'rethink\W*db',
+        'CouchDB' => 'couch\W*db',
+        'Riak' => 'riak',
+        'HBase' => 'hbase',
+    ],
+
+    'Очереди' => [
+        'RabbitMQ' => 'rabbit\W*mq',
+        'AMQP' => 'amqp',
+        'ActiveMQ' => 'active\W*mq',
+        'Beanstalk' => 'beanstalk',
+        'Gearman' => 'gearman',
+    ],
+
+    'Поисковые движки' => [
+        'Coveo' => 'coveo',
+        'Sphinx' => 'sphinx',
+        'Lucene' => 'lucene',
+        'Solr' => 'solr',
+    ],
+
+    // -----------------------------------------------
 
     'Frontend' => [
         'jQuery' => 'j\W*query',
@@ -90,38 +131,7 @@ return [
         'WebRTC' => 'web\W*rtc',
     ],
 
-    'Databases' => [
-        'MySQL' => 'mysql',
-        'PostgreSQL' => 'postgre',
-        'SQLite' => 'sql\W*lite',
-        'MSSQL' => 'ms\W*sql',
-        'MongoDB' => 'mongo',
-        'Redis' => 'redis',
-        'MariaDB' => 'maria\W*db',
-        'Tarantool' => 'tarantool',
-        'ElasticSearch' => 'elastic\W*search',
-        'Cassandra' => 'cassandra',
-        'Oracle' => 'oracle',
-        'RethinkDB' => 'rethink\W*db',
-        'CouchDB' => 'couch\W*db',
-        'Riak' => 'riak',
-        'HBase' => 'hbase',
-    ],
-
-    'Очереди' => [
-        'RabbitMQ' => 'rabbit\W*mq',
-        'AMQP' => 'amqp',
-        'ActiveMQ' => 'active\W*mq',
-        'Beanstalk' => 'beanstalk',
-        'Gearman' => 'gearman',
-    ],
-
-    'Поисковые движки' => [
-        'Coveo' => 'coveo',
-        'Sphinx' => 'sphinx',
-        'Lucene' => 'lucene',
-        'Solr' => 'solr',
-    ],
+    // ------------------------------------------------------
 
     'VCS' => [
         'Mercurial' => 'mercurial|(\W|^)hg(\W|\d|$)',
@@ -171,11 +181,7 @@ return [
         'Pinba' => 'pinba',
     ],
 
-    'Техники разработки' => [
-        'DDD' => 'ddd',
-        'TDD' => 'tdd',
-        'BDD' => 'bdd',
-    ],
+    // -------------------------------------------
 
     'Прочее' => [
         'LAMP' => 'lamp',
@@ -197,6 +203,8 @@ return [
         'SOLID' => 'solid',
         'HHVM' => 'hhvm',
     ],
+
+    // ------------------------------------------
 
     'CI' => [
         'Bamboo' => 'bamboo',
@@ -230,11 +238,7 @@ return [
         'Komodo' => 'komodo',
     ],
 
-    'Тестирование' => [
-        'Selenium' => 'selenium|селениум',
-        'PHP Unit' => 'php\W*unit',
-        'Codeception' => 'code\W*ception',
-    ],
+    // -----------------------------------------
 
     'Должность' => [
         'Юниор' => 'junior|юниор|начинающий',
@@ -248,5 +252,11 @@ return [
         'Agile' => 'agile',
         'Scrum' => 'scrum',
         'Kanban' => 'kanban',
+    ],
+
+    'Техники разработки' => [
+        'DDD' => 'ddd',
+        'TDD' => 'tdd',
+        'BDD' => 'bdd',
     ],
 ];
