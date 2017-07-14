@@ -4,6 +4,7 @@ namespace app\commands;
 
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -11,6 +12,10 @@ use Symfony\Component\DomCrawler\Crawler;
 class GetStatsHh extends Command
 {
     const PAGES_URL = 'http://hh.ru/search/vacancy?items_on_page=100&enable_snippets=true&text=PHP&no_magic=true&clusters=true&search_period=30&currency_code=USD&page=%d';
+
+    const GET_REQUEST_MAX_ATTEMPTS = 5;
+    const GET_REQUEST_MAX_SLEEP = 5;
+    const GET_REQUEST_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36';
 
     const VACANCY_URLS_SELECTOR = 'div.search-result-item__head a';
     const VACANCY_TITLE_SELECTOR = 'h1.b-vacancy-title';
@@ -36,49 +41,72 @@ class GetStatsHh extends Command
             ->setDescription('Get tech stats from hh.ru');
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function initialize(InputInterface $input, OutputInterface $output) {
         $this->input = $input;
         $this->output = $output;
         $this->config = require APP_ROOT_PATH . '/config.php';
     }
-    
-    protected function execute() {
-        $pageNumber = 0;
-        while(true) {
-            $vacancyUrls = $this->getVacancyUrls($pageNumber);
-            if(!$vacancyUrls) {
-                $this->output->writeln('The end');
-                break;
-            }
 
-            foreach ($vacancyUrls as $url) {
+    protected function execute(InputInterface $input, OutputInterface $output) {
+        try {
+            $this->outputInfo('Begin parse vacancy urls');
+            $urls = $this->getVacancyUrls();
+            $countVacancies = count($urls);
+            $this->outputInfo("Received {$countVacancies} vacancy urls");
+            $this->output->write(PHP_EOL);
+
+            $this->outputInfo('Begin parse vacancy stats');
+            $progress = new ProgressBar($this->output, $countVacancies);
+            $progress->start();
+            foreach ($urls as $url) {
                 $this->parseVacancy($url);
+                $progress->advance();
             }
+            $progress->finish();
+            $this->output->write(PHP_EOL);
+
             $this->saveStats();
             $this->saveIgnoredWords();
-
-            $pageNumber++;
+            $this->outputInfo('Save stats and ignored words finished');
+        } catch (\Exception $e) {
+            $this->outputError('(' . get_class($e) . ') ' . $e->getMessage());
         }
     }
 
-    private function getVacancyUrls($pageNumber) {
-        $this->output->writeln("Get stats for page {$pageNumber}");
-        $url = sprintf(self::PAGES_URL, $pageNumber);
-        $html = (new Client())->request('GET', $url)->getBody();
-
+    /**
+     * @return array
+     */
+    private function getVacancyUrls() {
         $urls = [];
-        (new Crawler($html))->filter(self::VACANCY_URLS_SELECTOR)->each(function(Crawler $node, $i) {
-            $urls[] = $node->attr('href');
-        });
+
+        $pageNumber = 0;
+        while(true) {
+            $html = $this->getPage(sprintf(self::PAGES_URL, $pageNumber));
+            $links = (new Crawler($html))->filter(self::VACANCY_URLS_SELECTOR);
+            if($links->count() == 0) {
+                break;
+            }
+
+            $links->each(function(Crawler $node, $i) {
+                $urls[] = $node->attr('href');
+            });
+
+            $pageNumber++;
+        }
 
         return $urls;
     }
 
+    /**
+     * @param string $url
+     * @throws \Exception
+     */
     private function parseVacancy($url) {
-        $html = (new Client())->request('GET', $url)->getBody();
-        sleep(mt_rand(0, 5));
-
-        $crawler = new Crawler($html);
+        $crawler = new Crawler($this->getPage($url));
         $title = $crawler->filter(self::VACANCY_TITLE_SELECTOR)->text();
         $text = $crawler->filter(self::VACANCY_TEXT_SELECTOR)->text();
         if(!$title || !$text) {
@@ -105,6 +133,9 @@ class GetStatsHh extends Command
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function saveStats() {
         foreach($this->stats as &$techs) {
             if(is_array($techs)) {
@@ -120,12 +151,53 @@ class GetStatsHh extends Command
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function saveIgnoredWords() {
+        asort($this->ignoredWords);
+
         if(file_put_contents(
             APP_ROOT_PATH . '/results/last-ignored-words.txt',
             implode(PHP_EOL, $this->ignoredWords)
         ) === false) {
             throw new \Exception('Save ignored words failed');
         }
+    }
+
+    /**
+     * @param $url
+     * @return string
+     * @throws \Exception
+     */
+    private function getPage($url) {
+        for($i = 1; $i <= self::GET_REQUEST_MAX_ATTEMPTS; $i++) {
+            sleep(mt_rand(0, self::GET_REQUEST_MAX_SLEEP));
+
+            try {
+                $html = (new Client())->request('GET', $url, ['headers' => [
+                    'User-Agent' => self::GET_REQUEST_USER_AGENT,
+                ]])->getBody()->getContents();
+                return $html;
+            } catch (\Exception $e) {
+                if($i == self::GET_REQUEST_MAX_ATTEMPTS) {
+                    throw new $e;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param string $msg
+     */
+    private function outputInfo($msg) {
+        $this->output->writeln(date('Y-m-d H:i:s') . ' [INFO] ' . $msg);
+    }
+
+    /**
+     * @param string $msg
+     */
+    private function outputError($msg) {
+        $this->output->writeln('<error>' . date('Y-m-d H:i:s') . ' [ERROR] ' . $msg . '</error>');
     }
 }

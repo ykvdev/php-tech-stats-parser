@@ -5,8 +5,8 @@
         "symfony/dom-crawler": "^3.2"
     },
     "autoload": {
-        "psr-0": {
-            "app\\": "/"
+        "psr-4": {
+            "app\\commands\\": "commands/"
         }
     }
 }
