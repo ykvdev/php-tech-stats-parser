@@ -40,7 +40,7 @@ return [
         'phpBB' => 'php\W*bb',
         'SMF' => 'smf',
         'Vbulletin' => 'v\W*bulletin',
-        'IPS' => 'ips',
+//        'IPS' => 'ips',
         'PunBB' => 'pun\W*bb',
         'Vanilla' => 'vanilla',
         'Xenforo' => 'xenforo',

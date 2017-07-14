@@ -13,10 +13,6 @@ class GetStatsHh extends Command
 {
     const PAGES_URL = 'http://hh.ru/search/vacancy?items_on_page=100&enable_snippets=true&text=PHP&no_magic=true&clusters=true&search_period=30&currency_code=USD&page=%d';
 
-    const GET_REQUEST_MAX_ATTEMPTS = 5;
-    const GET_REQUEST_MAX_SLEEP = 5;
-    const GET_REQUEST_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36';
-
     const VACANCY_URLS_SELECTOR = 'div.search-result-item__head a';
     const VACANCY_TITLE_SELECTOR = 'h1.b-vacancy-title';
     const VACANCY_TEXT_SELECTOR = 'div.b-vacancy-desc-wrapper';
@@ -57,7 +53,6 @@ class GetStatsHh extends Command
             $urls = $this->getVacancyUrls();
             $countVacancies = count($urls);
             $this->outputInfo("Received {$countVacancies} vacancy urls");
-            $this->output->write(PHP_EOL);
 
             $this->outputInfo('Begin parse vacancy stats');
             $progress = new ProgressBar($this->output, $countVacancies);
@@ -85,13 +80,16 @@ class GetStatsHh extends Command
 
         $pageNumber = 0;
         while(true) {
-            $html = $this->getPage(sprintf(self::PAGES_URL, $pageNumber));
-            $links = (new Crawler($html))->filter(self::VACANCY_URLS_SELECTOR);
-            if($links->count() == 0) {
+            $url = sprintf(self::PAGES_URL, $pageNumber);
+            $response = (new Client(['http_errors' => false]))->request('GET', $url);
+            if($response->getStatusCode() == 404) {
                 break;
             }
 
-            $links->each(function(Crawler $node, $i) {
+            $html = $response->getBody()->getContents();
+            (new Crawler($html))
+            ->filter(self::VACANCY_URLS_SELECTOR)
+            ->each(function(Crawler $node, $i) use(&$urls) {
                 $urls[] = $node->attr('href');
             });
 
@@ -106,7 +104,8 @@ class GetStatsHh extends Command
      * @throws \Exception
      */
     private function parseVacancy($url) {
-        $crawler = new Crawler($this->getPage($url));
+        $html = (new Client())->request('GET', $url)->getBody()->getContents();
+        $crawler = new Crawler($html);
         $title = $crawler->filter(self::VACANCY_TITLE_SELECTOR)->text();
         $text = $crawler->filter(self::VACANCY_TEXT_SELECTOR)->text();
         if(!$title || !$text) {
@@ -126,9 +125,11 @@ class GetStatsHh extends Command
             }
         }
 
-        foreach(explode(' ', $text) as $word) {
+        $text = preg_replace('/[^\da-z\-\s\/\\\\\|]/i', '', $text);
+        foreach(preg_split('/(\s|\/|\\\\|\|)/', $text) as $word) {
+            $word = trim($word);
             if(!in_array($word, $this->ignoredWords) && preg_match('/[a-z]{2,}/i', $word)) {
-                $this->ignoredWords[] = trim($word);
+                $this->ignoredWords[] = $word;
             }
         }
     }
@@ -162,28 +163,6 @@ class GetStatsHh extends Command
             implode(PHP_EOL, $this->ignoredWords)
         ) === false) {
             throw new \Exception('Save ignored words failed');
-        }
-    }
-
-    /**
-     * @param $url
-     * @return string
-     * @throws \Exception
-     */
-    private function getPage($url) {
-        for($i = 1; $i <= self::GET_REQUEST_MAX_ATTEMPTS; $i++) {
-            sleep(mt_rand(0, self::GET_REQUEST_MAX_SLEEP));
-
-            try {
-                $html = (new Client())->request('GET', $url, ['headers' => [
-                    'User-Agent' => self::GET_REQUEST_USER_AGENT,
-                ]])->getBody()->getContents();
-                return $html;
-            } catch (\Exception $e) {
-                if($i == self::GET_REQUEST_MAX_ATTEMPTS) {
-                    throw new $e;
-                }
-            }
         }
     }
 
