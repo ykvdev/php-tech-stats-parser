@@ -52,7 +52,7 @@ class GetStatsHh extends Command
             $this->outputInfo('Begin parse vacancy urls');
             $urls = $this->getVacancyUrls();
             $countVacancies = count($urls);
-            $this->outputInfo("Received {$countVacancies} vacancy urls");
+            $this->outputInfo("Received vacancies number: {$countVacancies}");
 
             $this->outputInfo('Begin parse vacancy stats');
             $progress = new ProgressBar($this->output, $countVacancies);
