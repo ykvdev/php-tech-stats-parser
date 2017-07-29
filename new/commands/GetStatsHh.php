@@ -64,6 +64,7 @@ class GetStatsHh extends Command
             $progress->finish();
             $this->output->write(PHP_EOL);
 
+            $this->sortStats();
             $this->saveStats();
             $this->saveIgnoredWords();
             $this->outputInfo('Save stats and ignored words finished');
@@ -78,7 +79,7 @@ class GetStatsHh extends Command
     private function getVacancyUrls() {
         $urls = [];
 
-        $pageNumber = 0;
+        $pageNumber = 19;
         while(true) {
             $url = sprintf(self::PAGES_URL, $pageNumber);
             $response = (new Client(['http_errors' => false]))->request('GET', $url);
@@ -134,20 +135,32 @@ class GetStatsHh extends Command
         }
     }
 
+    private function sortStats() {
+        $sortedStats = [];
+        foreach (array_keys($this->config) as $category) if (isset($this->stats[$category])) {
+            $sortedStats[$category] = $this->stats[$category];
+            arsort($sortedStats[$category]);
+        }
+
+        $this->stats = $sortedStats;
+    }
+
     /**
      * @throws \Exception
      */
     private function saveStats() {
-        foreach($this->stats as &$techs) {
-            if(is_array($techs)) {
-                arsort($techs);
-            }
+        $statsFilePath = APP_ROOT_PATH . '/results/' . date('Y') . '.json';
+        $statsFromFile = [];
+        if(file_exists($statsFilePath)) {
+            $statsFromFile = json_decode(file_get_contents($statsFilePath), true);
+            $statsFromFile = !is_array($statsFromFile) ? [] : $statsFromFile;
         }
 
-        if(file_put_contents(
-            APP_ROOT_PATH . '/results/stats.json',
-            json_encode($this->stats)
-        ) === false) {
+        $statsToFile = $statsFromFile;
+        $statsToFile[date('n')] = $this->stats;
+        ksort($statsToFile);
+
+        if(file_put_contents($statsFilePath, json_encode($statsToFile)) === false) {
             throw new \Exception('Save stats failed');
         }
     }
