@@ -115,7 +115,7 @@ return [
         'io.js' => 'io\W*js',
         'SockJS' => 'sock\W*js',
         'Underscore' => 'underscore',
-        'ReactJS' => 'react\W*js',
+        'ReactJS' => 'react',
         'ExtJS' => 'ext\W*js',
         'ECMAScript' => 'ecma\W*script',
         'Dojo' => 'dojo',
