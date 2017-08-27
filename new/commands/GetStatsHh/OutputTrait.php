@@ -1,13 +1,10 @@
 <?php
 
-namespace app\commands\get_stats_hh;
+namespace app\commands\GetStatsHh;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Trait OutputTrait
- * @package app\commands\common
- *
  * @property array $config
  */
 trait OutputTrait
@@ -16,8 +13,8 @@ trait OutputTrait
     private $output;
 
     private function removeOldOutputLogIfNeed() {
-        if(file_exists($this->config['paths']['get_stats_output_log'])) {
-            unlink($this->config['paths']['get_stats_output_log']);
+        if(file_exists($this->config['paths']['output_log'])) {
+            unlink($this->config['paths']['output_log']);
         }
     }
 
@@ -47,6 +44,6 @@ trait OutputTrait
      * @param string $msg
      */
     private function outputToLog($msg) {
-        file_put_contents($this->config['paths']['get_stats_output_log'], $msg . PHP_EOL, FILE_APPEND);
+        file_put_contents($this->config['paths']['output_log'], $msg . PHP_EOL, FILE_APPEND);
     }
 }

@@ -2,7 +2,7 @@
 
 return [
     'paths' => [
-        'get_stats_output_log' => APP_ROOT_PATH . '/results/get_stats_output.log',
+        'output_log' => APP_ROOT_PATH . '/results/get_stats_output.log',
         'stats_json' => APP_ROOT_PATH . '/results/stats_{year}.json',
         'last_ignored_words' => APP_ROOT_PATH . '/results/last_ignored_words.txt',
     ],

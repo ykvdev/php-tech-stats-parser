@@ -1,15 +1,15 @@
 <?php
 
-namespace app\commands\get_stats_hh;
+namespace app\commands\GetStatsHh;
 
 use GuzzleHttp\Client;
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
-class Command extends SymfonyCommand
+class GetStatsHh extends Command
 {
     use OutputTrait;
 
@@ -39,7 +39,7 @@ class Command extends SymfonyCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output) {
         $this->output = $output;
-        $this->config = require APP_ROOT_PATH . '/config.php';
+        $this->config = require __DIR__ . '/config.php';
         $this->removeOldOutputLogIfNeed();
     }
 
