@@ -1,7 +1,8 @@
 <?php
 
-namespace app\commands\GetStatsHh;
+namespace app\commands;
 
+use app\commands\GetStatsHh\Output;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -11,8 +12,6 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class GetStatsHh extends Command
 {
-    use OutputTrait;
-
     const PAGES_URL = 'http://hh.ru/search/vacancy?items_on_page=100&enable_snippets=true&text=PHP&no_magic=true&clusters=true&search_period=30&currency_code=USD&page=%d';
 
     const VACANCY_URLS_SELECTOR = 'div.search-result-item__head a';
@@ -21,6 +20,9 @@ class GetStatsHh extends Command
 
     /** @var array */
     private $config;
+
+    /** @var Output */
+    private $output;
 
     /** @var array */
     private $stats = [];
@@ -38,19 +40,18 @@ class GetStatsHh extends Command
      * @param OutputInterface $output
      */
     protected function initialize(InputInterface $input, OutputInterface $output) {
-        $this->output = $output;
-        $this->config = require __DIR__ . '/config.php';
-        $this->removeOldOutputLogIfNeed();
+        $this->config = require __DIR__ . '/' . end(explode('\\', __CLASS__)) . '/config.php';
+        $this->output = new Output($output, $this->config['paths']['output_log']);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         try {
-            $this->outputInfo('Begin parse vacancy urls');
+            $this->output->info('Begin parse vacancy urls');
             $urls = $this->getVacancyUrls();
             $countVacancies = count($urls);
-            $this->outputInfo("Received vacancies number: {$countVacancies}");
+            $this->output->info("Received vacancies number: {$countVacancies}");
 
-            $this->outputInfo('Begin parse vacancy stats');
+            $this->output->info('Begin parse vacancy stats');
             $progress = new ProgressBar($this->output, $countVacancies);
             $progress->start();
             foreach ($urls as $url) {
@@ -61,14 +62,14 @@ class GetStatsHh extends Command
                 $progress->advance();
             }
             $progress->finish();
-            $this->outputEol();
+            $this->output->eol();
 
             $this->sortStats();
             $this->saveStats();
             $this->saveIgnoredWords();
-            $this->outputInfo('Save stats and ignored words finished');
+            $this->output->info('Save stats and ignored words finished');
         } catch (\Exception $e) {
-            $this->outputError('(' . get_class($e) . ') ' . $e->getMessage());
+            $this->output->error('(' . get_class($e) . ') ' . $e->getMessage());
         }
     }
 
