@@ -54,7 +54,10 @@ class GetStatsHh extends Command
             $progress = new ProgressBar($this->output, $countVacancies);
             $progress->start();
             foreach ($urls as $url) {
-                $this->parseVacancy($url);
+                $text = $this->getVacancyText($url);
+                $this->parseVacancyStats($text);
+                $this->parseVacancyIgnoredWords($text);
+
                 $progress->advance();
             }
             $progress->finish();
@@ -98,9 +101,10 @@ class GetStatsHh extends Command
 
     /**
      * @param string $url
+     * @return string
      * @throws \Exception
      */
-    private function parseVacancy($url) {
+    private function getVacancyText($url) {
         $html = (new Client())->request('GET', $url)->getBody()->getContents();
         $crawler = new Crawler($html);
         $title = $crawler->filter(self::VACANCY_TITLE_SELECTOR)->text();
@@ -110,6 +114,13 @@ class GetStatsHh extends Command
         }
         $text .= $title;
 
+        return $text;
+    }
+
+    /**
+     * @param string $text
+     */
+    private function parseVacancyStats(&$text) {
         $vacancyTechs = [];
         foreach($this->config['patterns'] as $category => $techs) {
             foreach($techs as $tech => $pattern) {
@@ -121,7 +132,12 @@ class GetStatsHh extends Command
                 }
             }
         }
+    }
 
+    /**
+     * @param string $text
+     */
+    private function parseVacancyIgnoredWords(&$text) {
         $text = preg_replace('/[^\da-z\-\s\/\\\\\|]/i', '', $text);
         foreach(preg_split('/(\s|\/|\\\\|\|)/', $text) as $word) {
             $word = trim($word);
