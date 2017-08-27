@@ -19,6 +19,13 @@ class Output
     }
 
     /**
+     * @return OutputInterface
+     */
+    public function getOutput() {
+        return $this->output;
+    }
+
+    /**
      * @param string $msg
      */
     public function info($msg) {

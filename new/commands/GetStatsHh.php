@@ -38,7 +38,7 @@ class GetStatsHh extends Command
      * @param OutputInterface $output
      */
     protected function initialize(InputInterface $input, OutputInterface $output) {
-        $this->config = require __DIR__ . '/' . end(explode('\\', __CLASS__)) . '/config.php';
+        $this->config = require __DIR__ . '/GetStatsHh/config.php';
         $this->output = new Output($output, $this->config['paths']['output_log']);
         $this->vacancy = new Vacancy;
         $this->stats = new Stats($this->config['patterns'], $this->config['paths']['stats_json']);
@@ -53,7 +53,7 @@ class GetStatsHh extends Command
             $this->output->info("Received vacancies number: {$countVacancies}");
 
             $this->output->info('Begin parse vacancy stats');
-            $progress = new ProgressBar($this->output, $countVacancies);
+            $progress = new ProgressBar($this->output->getOutput(), $countVacancies);
             $progress->start();
             foreach ($urls as $url) {
                 $text = $this->vacancy->getTextByUrl($url);
