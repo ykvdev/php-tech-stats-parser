@@ -2,27 +2,24 @@
 
 namespace app\commands;
 
-use app\commands\GetStatsHh\Output;
-use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DomCrawler\Crawler;
+
+use app\commands\GetStatsHh\Output;
+use app\commands\GetStatsHh\Vacancy;
 
 class GetStatsHh extends Command
 {
-    const PAGES_URL = 'http://hh.ru/search/vacancy?items_on_page=100&enable_snippets=true&text=PHP&no_magic=true&clusters=true&search_period=30&currency_code=USD&page=%d';
-
-    const VACANCY_URLS_SELECTOR = 'div.search-result-item__head a';
-    const VACANCY_TITLE_SELECTOR = 'h1.b-vacancy-title';
-    const VACANCY_TEXT_SELECTOR = 'div.b-vacancy-desc-wrapper';
-
     /** @var array */
     private $config;
 
     /** @var Output */
     private $output;
+
+    /** @var Vacancy */
+    private $vacancy;
 
     /** @var array */
     private $stats = [];
@@ -42,12 +39,13 @@ class GetStatsHh extends Command
     protected function initialize(InputInterface $input, OutputInterface $output) {
         $this->config = require __DIR__ . '/' . end(explode('\\', __CLASS__)) . '/config.php';
         $this->output = new Output($output, $this->config['paths']['output_log']);
+        $this->vacancy = new Vacancy;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         try {
             $this->output->info('Begin parse vacancy urls');
-            $urls = $this->getVacancyUrls();
+            $urls = $this->vacancy->getUrlsList();
             $countVacancies = count($urls);
             $this->output->info("Received vacancies number: {$countVacancies}");
 
@@ -55,7 +53,7 @@ class GetStatsHh extends Command
             $progress = new ProgressBar($this->output, $countVacancies);
             $progress->start();
             foreach ($urls as $url) {
-                $text = $this->getVacancyText($url);
+                $text = $this->vacancy->getTextByUrl($url);
                 $this->parseVacancyStats($text);
                 $this->parseVacancyIgnoredWords($text);
 
@@ -71,51 +69,6 @@ class GetStatsHh extends Command
         } catch (\Exception $e) {
             $this->output->error('(' . get_class($e) . ') ' . $e->getMessage());
         }
-    }
-
-    /**
-     * @return array
-     */
-    private function getVacancyUrls() {
-        $urls = [];
-
-        $pageNumber = 19;
-        while(true) {
-            $url = sprintf(self::PAGES_URL, $pageNumber);
-            $response = (new Client(['http_errors' => false]))->request('GET', $url);
-            if($response->getStatusCode() == 404) {
-                break;
-            }
-
-            $html = $response->getBody()->getContents();
-            (new Crawler($html))
-            ->filter(self::VACANCY_URLS_SELECTOR)
-            ->each(function(Crawler $node, $i) use(&$urls) {
-                $urls[] = $node->attr('href');
-            });
-
-            $pageNumber++;
-        }
-
-        return $urls;
-    }
-
-    /**
-     * @param string $url
-     * @return string
-     * @throws \Exception
-     */
-    private function getVacancyText($url) {
-        $html = (new Client())->request('GET', $url)->getBody()->getContents();
-        $crawler = new Crawler($html);
-        $title = $crawler->filter(self::VACANCY_TITLE_SELECTOR)->text();
-        $text = $crawler->filter(self::VACANCY_TEXT_SELECTOR)->text();
-        if(!$title || !$text) {
-            throw new \Exception("Get vacancy data failed ({$url})");
-        }
-        $text .= $title;
-
-        return $text;
     }
 
     /**
