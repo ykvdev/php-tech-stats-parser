@@ -25,7 +25,7 @@ class Stats
     /**
      * @param string $text
      */
-    public function parseByVacancyText(&$text) {
+    public function parseFromVacancyText(&$text) {
         $vacancyTechs = [];
         foreach($this->patterns as $category => $techs) {
             foreach($techs as $tech => $pattern) {
