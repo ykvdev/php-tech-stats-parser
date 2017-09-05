@@ -21,11 +21,11 @@ class IgnoredWords
      * @param string $text
      */
     public function parseFromVacancyText(&$text) {
-        $text = preg_replace('/[^\da-z\-\s\/\\\\\|]/i', '', $text);
+        $text = preg_replace('/[^\da-z\-\s\/\\\\\|]/i', ' ', $text);
         foreach(preg_split('/(\s|\/|\\\\|\|)/', $text) as $word) {
             $word = trim($word);
-            if(!in_array($word, $this->ignoredWords) && preg_match('/[a-z]{2,}/i', $word)) {
-                $this->ignoredWords[] = $word;
+            if(preg_match('/[a-z]{2,}/i', $word)) {
+                $this->ignoredWords[strtolower($word)] = $word;
             }
         }
     }
