@@ -50,7 +50,7 @@ class GenCharts extends Command
             }
 
             $this->output->info("Begin generate charts by {$year} year and {$month} month");
-            $stats = json_decode(strtr($this->config['paths']['stats_json'], ['{year}' => $year]), true);
+            $stats = json_decode(file_get_contents(strtr($this->config['paths']['stats_json'], ['{year}' => $year])), true);
             $chartNumber = 1;
             foreach ($stats[$month] as $category => $techsStats) {
                 $this->output->info("Generate bar chart for category \"{$category}\"");
@@ -91,7 +91,8 @@ class GenCharts extends Command
             '', $lastStatsFilePath);
 
         $stats = json_decode(file_get_contents($lastStatsFilePath), true);
-        $lastMonth = key(end($stats));
+        end($stats);
+        $lastMonth = key($stats);
 
         return [$lastYear, $lastMonth];
     }
@@ -100,7 +101,7 @@ class GenCharts extends Command
         arsort($techsStats);
 
         /* Create and populate the pData object */
-        $MyData = new pData();
+        $MyData = new \pData();
         $MyData->setAxisName(0,"Кол-во упоминаний");
         $MyData->addPoints(array_keys($techsStats),"abscissa");
         $MyData->setAbscissa("abscissa");
@@ -109,7 +110,7 @@ class GenCharts extends Command
         $MyData->addPoints(array_values($techsStats));
 
         /* Create the pChart object */
-        $myPicture = new pImage(600,500,$MyData);
+        $myPicture = new \pImage(600,500,$MyData);
 //    $myPicture->drawGradientArea(0,0,600,500,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
 //    $myPicture->drawGradientArea(0,0,600,500,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
         $myPicture->setFontProperties(array("FontName"=>__DIR__ . '/GenCharts/Candara.ttf',"FontSize"=>10));
