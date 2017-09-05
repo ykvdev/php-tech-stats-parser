@@ -2,9 +2,10 @@
 
 return [
     'paths' => [
-        'output_log' => APP_ROOT_PATH . '/results/get_stats_output.log',
+        'get_stats_output_log' => APP_ROOT_PATH . '/results/get_stats_output.log',
         'stats_json' => APP_ROOT_PATH . '/results/stats_{year}.json',
         'last_ignored_words' => APP_ROOT_PATH . '/results/last_ignored_words.txt',
+        'chart' => APP_ROOT_PATH . '/results/charts/{number}-{category}.png',
     ],
 
     'patterns' => [

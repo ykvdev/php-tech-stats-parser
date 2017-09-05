@@ -1,6 +1,6 @@
 <?php
 
-namespace app\commands\GetStatsHh;
+namespace app\commands\Common;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -12,7 +12,11 @@ class Output
     /** @var string */
     private $outputLogPath;
 
-    public function __construct(OutputInterface $output, $outputLogPath) {
+    /**
+     * @param OutputInterface $output
+     * @param bool|string $outputLogPath
+     */
+    public function __construct(OutputInterface $output, $outputLogPath = false) {
         $this->output = $output;
         $this->outputLogPath = $outputLogPath;
         $this->removeOldLogIfNeed();
@@ -48,7 +52,7 @@ class Output
     }
 
     private function removeOldLogIfNeed() {
-        if(file_exists($this->outputLogPath)) {
+        if($this->outputLogPath && file_exists($this->outputLogPath)) {
             unlink($this->outputLogPath);
         }
     }
@@ -57,6 +61,8 @@ class Output
      * @param string $msg
      */
     private function toLog($msg) {
-        file_put_contents($this->outputLogPath, $msg . PHP_EOL, FILE_APPEND);
+        if($this->outputLogPath) {
+            file_put_contents($this->outputLogPath, $msg . PHP_EOL, FILE_APPEND);
+        }
     }
 }

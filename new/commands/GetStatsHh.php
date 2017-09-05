@@ -3,7 +3,7 @@
 namespace app\commands;
 
 use app\commands\GetStatsHh\IgnoredWords;
-use app\commands\GetStatsHh\Output;
+use app\commands\Common\Output;
 use app\commands\GetStatsHh\Vacancy;
 use app\commands\GetStatsHh\Stats;
 use Symfony\Component\Console\Command\Command;
@@ -29,6 +29,8 @@ class GetStatsHh extends Command
     private $ignoredWords;
 
     protected function configure() {
+        $this->config = require APP_ROOT_PATH . '/config.php';
+
         $this->setName('get-stats-hh')
             ->setDescription('Get tech stats from hh.ru');
     }
@@ -38,8 +40,7 @@ class GetStatsHh extends Command
      * @param OutputInterface $output
      */
     protected function initialize(InputInterface $input, OutputInterface $output) {
-        $this->config = require __DIR__ . '/GetStatsHh/config.php';
-        $this->output = new Output($output, $this->config['paths']['output_log']);
+        $this->output = new Output($output, $this->config['paths']['get_stats_output_log']);
         $this->vacancy = new Vacancy;
         $this->stats = new Stats($this->config['patterns'], $this->config['paths']['stats_json']);
         $this->ignoredWords = new IgnoredWords($this->config['paths']['last_ignored_words']);
