@@ -19,7 +19,7 @@ class Vacancy
     public function getUrlsList() {
         $urls = [];
 
-        $pageNumber = 19;
+        $pageNumber = 0;
         while(true) {
             $url = sprintf(self::PAGES_URL, $pageNumber);
             $response = (new Client(['http_errors' => false]))->request('GET', $url);
