@@ -8,6 +8,8 @@ use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use CpChart\Data;
+use CpChart\Image;
 
 class GenCharts extends Command
 {
@@ -98,37 +100,24 @@ class GenCharts extends Command
     }
 
     private function generateBarChart($number, $category, $techsStats) {
-        arsort($techsStats);
+        $data = new Data();
+        $data->addPoints(array_values($techsStats), 'hits');
+        $data->setPalette('hits', ['R' => 224, 'G' => 100, 'B' => 46]);
+        $data->setAxisName(0,"Кол-во упоминаний");
+        $data->addPoints(array_keys($techsStats),"techs");
+        $data->setAbscissa("techs");
+        $data->setAxisDisplay(0,AXIS_FORMAT_METRIC,1);
 
-        /* Create and populate the pData object */
-        $MyData = new \pData();
-        $MyData->setAxisName(0,"Кол-во упоминаний");
-        $MyData->addPoints(array_keys($techsStats),"abscissa");
-        $MyData->setAbscissa("abscissa");
-        $MyData->setAxisDisplay(0,AXIS_FORMAT_METRIC,1);
-
-        $MyData->addPoints(array_values($techsStats));
-
-        /* Create the pChart object */
-        $myPicture = new \pImage(600,500,$MyData);
-//    $myPicture->drawGradientArea(0,0,600,500,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
-//    $myPicture->drawGradientArea(0,0,600,500,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
-        $myPicture->setFontProperties(array("FontName"=>__DIR__ . '/GenCharts/Candara.ttf',"FontSize"=>10));
-
-        $myPicture->drawText(20,30,$category,array("FontSize"=>13,"Align"=>TEXT_ALIGN_BOTTOMLEFT));
-
-        /* Draw the chart scale */
-        $myPicture->setGraphArea(150,50,580,480);
-        $myPicture->drawScale(array("CycleBackground"=>TRUE,"DrawSubTicks"=>false,"GridR"=>0,"GridG"=>0,"GridB"=>0,"GridAlpha"=>10,"Pos"=>SCALE_POS_TOPBOTTOM,"Mode"=>SCALE_MODE_START0));
-
-        /* Turn on shadow computing */
-        $myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
-
-        /* Draw the chart */
-        $myPicture->drawBarChart();
-
-        /* Render the picture (choose the best way) */
-        $myPicture->autoOutput(strtr($this->config['paths']['chart'], [
+        $image = new Image(600,500,$data);
+//    $image->drawGradientArea(0,0,600,500,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
+//    $image->drawGradientArea(0,0,600,500,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
+        $image->setFontProperties(array("FontName"=>__DIR__ . '/GenCharts/Candara.ttf',"FontSize"=>10));
+        $image->drawText(20,30,$category,array("FontSize"=>13,"Align"=>TEXT_ALIGN_BOTTOMLEFT));
+        $image->setGraphArea(150,50,580,480);
+        $image->drawScale(["CycleBackground"=>TRUE,"DrawSubTicks"=>false,"GridR"=>0,"GridG"=>0,"GridB"=>0,"GridAlpha"=>10,"Pos"=>SCALE_POS_TOPBOTTOM,"Mode"=>SCALE_MODE_START0]);
+        $image->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
+        $image->drawBarChart();
+        $image->autoOutput(strtr($this->config['paths']['chart'], [
             '{number}' => $number,
             '{category}' => \Behat\Transliterator\Transliterator::transliterate($category)
         ]));
