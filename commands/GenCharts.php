@@ -51,6 +51,8 @@ class GenCharts extends Command
                 throw new \Exception('No stats files found');
             }
 
+            $this->removeOldChartsIfNeed();
+
             $this->output->info("Begin generate charts by {$year} year and {$month} month");
             $stats = json_decode(file_get_contents(strtr($this->config['paths']['stats_json'], ['{year}' => $year])), true);
             $chartNumber = 1;
@@ -60,6 +62,17 @@ class GenCharts extends Command
             }
         } catch (\Exception $e) {
             $this->output->error('(' . get_class($e) . ') ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function removeOldChartsIfNeed() {
+        foreach(glob(strtr($this->config['paths']['chart'], ['{number}' => '*', '{category}' => '*'])) as $file) {
+            if(!unlink($file)) {
+                throw new \Exception("Remove old chart failed: {$file}");
+            }
         }
     }
 
