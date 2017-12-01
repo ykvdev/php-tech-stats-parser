@@ -71,7 +71,11 @@ class GetStatsHh extends Command
             $this->ignoredWords->save();
             $this->output->info('Save stats and ignored words finished');
         } catch (\Exception $e) {
-            $this->output->error('(' . get_class($e) . ') ' . $e->getMessage());
+            $this->output->error(
+                PHP_EOL . '(' . get_class($e) . ') '
+                . $e->getMessage()
+                . PHP_EOL . $e->getTraceAsString()
+            );
         }
     }
 }

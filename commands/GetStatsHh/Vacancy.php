@@ -9,9 +9,9 @@ class Vacancy
 {
     const PAGES_URL = 'http://hh.ru/search/vacancy?items_on_page=100&enable_snippets=true&text=PHP&no_magic=true&clusters=true&search_period=30&currency_code=USD&page=%d';
 
-    const VACANCY_URLS_SELECTOR = 'div.search-result-item__head a';
-    const VACANCY_TITLE_SELECTOR = 'h1.b-vacancy-title';
-    const VACANCY_TEXT_SELECTOR = 'div.b-vacancy-desc-wrapper';
+    const VACANCY_URLS_SELECTOR = 'div.vacancy-serp-item__info div.vacancy-serp-item__title a';
+    const VACANCY_TITLE_SELECTOR = 'h1';
+    const VACANCY_TEXT_SELECTOR = 'div.b-vacancy-desc-wrapper, div.l-paddings.b-vacancy-desc.g-user-content';
 
     /**
      * @return array
