@@ -23,7 +23,7 @@ class GenCharts extends Command
     private $input;
 
     protected function configure() {
-        $this->config = require APP_ROOT_PATH . '/config.php';
+        $this->config = require APP_ROOT_PATH . '/configs/common.php';
 
         $this->setName('gen-charts')
             ->setDescription('Generate charts by statistics file');

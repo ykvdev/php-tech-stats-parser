@@ -29,7 +29,7 @@ class GetStatsHh extends Command
     private $ignoredWords;
 
     protected function configure() {
-        $this->config = require APP_ROOT_PATH . '/config.php';
+        $this->config = require APP_ROOT_PATH . '/configs/common.php';
 
         $this->setName('get-stats-hh')
             ->setDescription('Get tech stats from hh.ru');
@@ -42,7 +42,7 @@ class GetStatsHh extends Command
     protected function initialize(InputInterface $input, OutputInterface $output) {
         $this->output = new Output($output, $this->config['paths']['get_stats_output_log']);
         $this->vacancy = new Vacancy;
-        $this->stats = new Stats($this->config['patterns'], $this->config['paths']['stats_json']);
+        $this->stats = new Stats($this->config['tech_patterns'], $this->config['paths']['stats_json']);
         $this->ignoredWords = new IgnoredWords($this->config['paths']['last_ignored_words']);
     }
 

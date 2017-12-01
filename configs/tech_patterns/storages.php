@@ -1,0 +1,60 @@
+<?php
+
+return [
+    'SQL СУБД' => [
+        'MySQL' => 'mysql',
+        'PostgreSQL' => 'postgre',
+        'SQLite' => 'sql.{0,1}lite',
+        'MSSQL' => 'ms.{0,1}sql',
+        'MariaDB' => 'maria.{0,1}db',
+    ],
+
+    'Документо-ориентированные СУБД' => [
+        'MongoDB' => 'mongo',
+        'RethinkDB' => 'rethink.{0,1}db',
+        'CouchDB' => 'couch.{0,1}db',
+    ],
+
+    'Ключ-значение СУБД' => [
+        'Redis' => 'redis',
+        'Tarantool' => 'tarantool',
+        'Riak' => 'riak',
+    ],
+
+    'Гибридные NoSQL СУБД' => [
+        'Cassandra' => 'cassandra',
+        'HBase' => 'hbase',
+    ],
+
+    'Очереди' => [
+        'RabbitMQ' => 'rabbit.{0,1}mq',
+        'AMQP' => 'amqp',
+        'ActiveMQ' => 'active.{0,1}mq',
+        'Beanstalk' => 'beanstalk',
+        'Gearman' => 'gearman',
+    ],
+
+    'Поисковые движки' => [
+        'Coveo' => 'coveo',
+        'Sphinx' => 'sphinx',
+        'Lucene' => 'lucene',
+        'Solr' => 'solr',
+        'ElasticSearch' => 'elastic.{0,1}search',
+    ],
+
+    'Кеширование' => [
+        'APC' => 'apc',
+        'XCache' => 'xcache',
+        'Varnish' => 'varnish',
+        'Memcache' => 'memcache',
+    ],
+
+    'Логирование и мониторинг' => [
+        'Munin' => 'munin',
+        'Graylog' => 'gray.{0,1}log',
+        'Grafana' => 'grafana',
+        'Logstash' => 'log.{0,1}stash',
+        'logrotate' => 'logrotate',
+        'Cacti' => 'cacti|cacty',
+    ],
+];
