@@ -34,7 +34,8 @@ class IgnoredWords
      * @throws \Exception
      */
     public function save() {
-        asort($this->ignoredWords);
+        // Sort ignored words by alphabet
+        //asort($this->ignoredWords);
 
         if(file_put_contents(
                 $this->lastIgnoredWordsPath,
