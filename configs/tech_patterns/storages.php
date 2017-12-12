@@ -15,6 +15,22 @@ return [
         'CouchDB' => 'couch.{0,1}db',
     ],
 
+    'Графовые СУБД' => [
+        'AllegroGraph' => 'allegro.{0,1}graph',
+        'ArangoDB' => 'arango',
+        'FlockDB' => 'flock',
+        'Giraph' => 'giraph',
+        'HyperGraphDB' => 'hyper.{0,1}graph',
+        'InfiniteGraph' => 'infinite.{0,1}graph',
+        'InfoGrid' => 'info.{0,1}grid',
+        'Neo4j' => 'neo4j',
+        'OrientDB' => 'orient.{0,1}db',
+        'SparkSee' => 'spark.{0,1}see',
+        'Sqrrl' => 'sqrrl',
+        'Titan' => 'titan',
+        'Datomic' => 'datomic',
+    ],
+
     'Ключ-значение СУБД' => [
         'Redis' => 'redis',
         'Tarantool' => 'tarantool',
