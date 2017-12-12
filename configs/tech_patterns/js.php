@@ -8,6 +8,7 @@ return [
         'GorillaScript' => 'gorilla.{0,1}script',
         'LiveScript' => 'live.{0,1}script',
         'Babel' => 'babel',
+        'Polymer' => 'polymer'
     ],
 
     'JS фреймворки' => [

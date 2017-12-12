@@ -83,5 +83,8 @@ return [
         'Doctrine' => 'doctrine',
         'PSR' => 'psr',
         'SPL' => 'spl',
+        'SOAP' => 'soap',
+        'REST' => 'rest',
+        'phpDoc' => 'php.{0,1}doc',
     ],
 ];
