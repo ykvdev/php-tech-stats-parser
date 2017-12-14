@@ -12,6 +12,8 @@ return [
         'MVC' => 'mvc',
         'SOLID' => 'solid',
         'HHVM' => 'hhvm',
+        'Hadoop' => 'hadoop',
+        'UML' => 'uml',
     ],
 
     'Ранги' => [

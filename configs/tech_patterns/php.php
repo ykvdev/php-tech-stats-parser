@@ -55,6 +55,9 @@ return [
         'Selenium' => 'selenium|селениум',
         'PHP Unit' => 'php.{0,1}unit',
         'Codeception' => 'code.{0,1}ception',
+        'Behat' => 'behat',
+        'PhpSpec' => 'php.{0,1}spec',
+        'Peridot' => 'peridot',
     ],
 
     'PHP шаблонизаторы' => [
@@ -62,6 +65,12 @@ return [
         'Twig' => 'twig',
         'Volt' => 'volt',
         'Blade' => 'blade',
+    ],
+
+    'PHP ORM' => [
+        'Propel' => 'propel',
+        'Doctrine' => 'doctrine',
+        'RedBeanPHP' => 'red.{0,1}bean',
     ],
 
     'PHP менеджеры пакетов' => [
@@ -80,7 +89,6 @@ return [
 
     'PHP прочее' => [
         'Zephir' => 'zephir',
-        'Doctrine' => 'doctrine',
         'PSR' => 'psr',
         'SPL' => 'spl',
         'SOAP' => 'soap',

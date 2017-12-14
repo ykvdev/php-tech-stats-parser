@@ -7,6 +7,7 @@ return [
         'SQLite' => 'sql.{0,1}lite',
         'MSSQL' => 'ms.{0,1}sql',
         'MariaDB' => 'maria.{0,1}db',
+        'Firebird' => 'firebird',
     ],
 
     'Документо-ориентированные СУБД' => [
