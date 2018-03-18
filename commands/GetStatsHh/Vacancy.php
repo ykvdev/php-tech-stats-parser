@@ -11,7 +11,7 @@ class Vacancy
 
     const VACANCY_URLS_SELECTOR = 'div.vacancy-serp-item__info div.vacancy-serp-item__title a';
     const VACANCY_TITLE_SELECTOR = 'h1';
-    const VACANCY_TEXT_SELECTOR = 'div.b-vacancy-desc-wrapper, div.l-paddings.b-vacancy-desc.g-user-content';
+    const VACANCY_TEXT_SELECTOR = 'div.b-vacancy-desc-wrapper, div.l-paddings.b-vacancy-desc.g-user-content, .vacancy-description';
 
     /**
      * @return array
