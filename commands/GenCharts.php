@@ -53,26 +53,28 @@ class GenCharts extends Command
 
             $this->removeOldChartsIfNeed();
 
-            $this->output->info("Begin generate charts by {$year} year and {$month} month");
             $stats = json_decode(file_get_contents(strtr($this->config['paths']['stats_json'], ['{year}' => $year])), true);
+
+            $this->output->info("Begin generate charts by {$year} year and {$month} month");
             $chartNumber = 1;
             foreach ($stats[$month] as $category => $techsStats) {
                 $this->output->info("Generate bar chart for category \"{$category}\"");
                 $this->generateBarChart($chartNumber++, $category, $techsStats);
             }
+
+            $this->output->info("Begin generate common chart by {$year} year and {$month} month");
+            $commonStats = array_merge(...array_values($stats[$month]));
+            $hitsSum = array_sum($commonStats);
+            $averageHit = $hitsSum / count($commonStats);
+            foreach ($commonStats as $techName => $techHits) {
+                if($techHits < $averageHit) {
+                    unset($commonStats[$techName]);
+                }
+            }
+            arsort($commonStats);
+            $this->generateBarChart($chartNumber, 'Общее', $commonStats, 600, 1000);
         } catch (\Exception $e) {
             $this->output->error('(' . get_class($e) . ') ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function removeOldChartsIfNeed() {
-        foreach(glob(strtr($this->config['paths']['chart'], ['{number}' => '*', '{category}' => '*'])) as $file) {
-            if(!unlink($file)) {
-                throw new \Exception("Remove old chart failed: {$file}");
-            }
         }
     }
 
@@ -112,7 +114,18 @@ class GenCharts extends Command
         return [$lastYear, $lastMonth];
     }
 
-    private function generateBarChart($number, $category, $techsStats) {
+    /**
+     * @throws \Exception
+     */
+    private function removeOldChartsIfNeed() {
+        foreach(glob(strtr($this->config['paths']['chart'], ['{number}' => '*', '{category}' => '*'])) as $file) {
+            if(!unlink($file)) {
+                throw new \Exception("Remove old chart failed: {$file}");
+            }
+        }
+    }
+
+    private function generateBarChart($number, $category, $techsStats, $width = 600, $height = 500) {
         $data = new Data();
         $data->addPoints(array_values($techsStats), 'hits');
         $data->setPalette('hits', ['R' => 224, 'G' => 100, 'B' => 46]);
@@ -121,12 +134,12 @@ class GenCharts extends Command
         $data->setAbscissa("techs");
         $data->setAxisDisplay(0,AXIS_FORMAT_METRIC,1);
 
-        $image = new Image(600,500,$data);
-//    $image->drawGradientArea(0,0,600,500,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
-//    $image->drawGradientArea(0,0,600,500,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
+        $image = new Image($width, $height, $data);
+//    $image->drawGradientArea(0,0,$width,$height,DIRECTION_VERTICAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>100));
+//    $image->drawGradientArea(0,0,$width,$height,DIRECTION_HORIZONTAL,array("StartR"=>240,"StartG"=>240,"StartB"=>240,"EndR"=>180,"EndG"=>180,"EndB"=>180,"Alpha"=>20));
         $image->setFontProperties(array("FontName"=>__DIR__ . '/GenCharts/Candara.ttf',"FontSize"=>10));
         $image->drawText(20,30,$category,array("FontSize"=>13,"Align"=>TEXT_ALIGN_BOTTOMLEFT));
-        $image->setGraphArea(150,50,580,480);
+        $image->setGraphArea(150,50,$width - 20,$height - 20);
         $image->drawScale(["CycleBackground"=>TRUE,"DrawSubTicks"=>false,"GridR"=>0,"GridG"=>0,"GridB"=>0,"GridAlpha"=>10,"Pos"=>SCALE_POS_TOPBOTTOM,"Mode"=>SCALE_MODE_START0]);
         $image->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
         $image->drawBarChart();
