@@ -1,6 +1,6 @@
 # Description
 
-This project allows to receive PHP technologies hits statistics from vacancies for "PHP" keyword by site hh.ru. Also allows to generate graphical charts for visually view of received statistics. For example you can see results of generated charts by this link (ru): http://atoumus.github.io/2016-php-trends.html
+This project allows to receive PHP technologies hits statistics from vacancies for "PHP" keyword by site hh.ru. Also allows to generate graphical charts for visually view of received statistics. For example you can see results of generated charts by this link (ru): http://atoumus.github.io/php-tech-ratings.html
 
 # Usage
 
