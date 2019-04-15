@@ -5,6 +5,7 @@ This project allows to receive PHP technologies hits statistics from vacancies f
 # Usage
 
 If you want to run this project on your PC or server, you should follow next steps:
+
 1. Clone this repository to your directory on PC or server.
 1. Go to the root directory of this project and run composer installing for install necessary libraries for this project.
 1. Run `php run.php get-stats-hh` for receive statistics from hh.ru vacancies.
