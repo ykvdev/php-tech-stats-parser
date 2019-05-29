@@ -22,17 +22,21 @@ class GenCharts extends Command
     /** @var Input */
     private $input;
 
-    protected function configure() {
-        $this->config = require APP_ROOT_PATH . '/configs/common.php';
+    /** @var int */
+    private $year;
 
+    /** @var int */
+    private $month;
+
+    protected function configure() {
         $this->setName('gen-charts')
             ->setDescription('Generate charts by statistics file');
 
         $this->addOption('year', 'y', InputOption::VALUE_OPTIONAL,
-            'Specific year for charts generation');
+            'Specific year for charts generation', date('Y'));
 
         $this->addOption('month', 'm', InputOption::VALUE_OPTIONAL,
-            'Specific month for charts generation');
+            'Specific month for charts generation', date('n'));
     }
 
     /**
@@ -40,92 +44,71 @@ class GenCharts extends Command
      * @param OutputInterface $output
      */
     protected function initialize(InputInterface $input, OutputInterface $output) {
+        $this->config = require APP_ROOT_PATH . '/configs/common.php';
+
         $this->output = new Output($output);
         $this->input = $input;
+
+        $this->year = $this->input->getOption('year');
+        $this->month = $this->input->getOption('month');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         try {
-            list($year, $month) = $this->getYearAndMonth();
-            if(!$year) {
-                throw new \Exception('No stats files found');
+            $statsFilePath = strtr($this->config['paths']['stats_json'], ['{year}' => $this->year]);
+            if (!file_exists($statsFilePath)) {
+                throw new \Exception("Stats file for {$this->year} year not found");
             }
+            $stats = json_decode(file_get_contents($statsFilePath), true);
 
-            $this->removeOldChartsIfNeed();
-
-            $stats = json_decode(file_get_contents(strtr($this->config['paths']['stats_json'], ['{year}' => $year])), true);
-
-            $this->output->info("Begin generate charts by {$year} year and {$month} month");
-            $chartNumber = 1;
-            foreach ($stats[$month] as $category => $techsStats) {
-                $this->output->info("Generate chart for category \"{$category}\"");
-                $this->generateBarChart($chartNumber++, $category, $techsStats);
-            }
-
-            $this->output->info('Generate common chart');
-            $commonStats = array_merge(...array_values($stats[$month]));
-            $hitsSum = array_sum($commonStats);
-            $averageHit = $hitsSum / count($commonStats);
-            foreach ($commonStats as $techName => $techHits) {
-                if($techHits < $averageHit) {
-                    unset($commonStats[$techName]);
+            $this->output->info("Begin generate charts by {$this->year} year and {$this->month} month");
+            foreach ($stats as $sourceAlias => $sourceStats) {
+                if (!isset($sourceStats[$this->month])) {
+                    $this->output->error("Stats for {$sourceAlias} and {$this->month} month does not exists");
+                    continue;
                 }
+
+                $chartNumber = 1;
+                $this->removeOldChartsIfNeed($sourceAlias);
+                foreach ($sourceStats[$this->month] as $category => $techsStats) {
+                    $this->output->info("Generate chart for {$sourceAlias} - {$category}");
+                    $this->generateBarChart($sourceAlias, $chartNumber++, $category, $techsStats);
+                }
+
+                $this->output->info('Generate common chart');
+                $commonStats = array_merge(...array_values($sourceStats[$this->month]));
+                $hitsSum = array_sum($commonStats);
+                $averageHit = $hitsSum / count($commonStats);
+                foreach ($commonStats as $techName => $techHits) {
+                    if ($techHits < $averageHit) {
+                        unset($commonStats[$techName]);
+                    }
+                }
+                arsort($commonStats);
+                $this->generateBarChart($sourceAlias, $chartNumber, 'Общее', $commonStats);
             }
-            arsort($commonStats);
-            $this->generateBarChart($chartNumber, 'Общее', $commonStats);
         } catch (\Exception $e) {
-            $this->output->error('(' . get_class($e) . ') ' . $e->getMessage());
+            $this->output->error(
+                PHP_EOL . '(' . get_class($e) . ') '
+                . $e->getMessage()
+                . PHP_EOL . $e->getTraceAsString()
+            );
         }
-    }
-
-    /**
-     * @return array
-     */
-    private function getYearAndMonth() {
-        $year = $this->input->getOption('year');
-        $month = $this->input->getOption('month');
-        if(!$year || !$month) {
-            list($lastStatsYear, $lastStatsMonth) = $this->getLastStatsYearAndMonth();
-            $year = $year ?: $lastStatsYear;
-            $month = $month ?: $lastStatsMonth;
-        }
-
-        return [$year, $month];
-    }
-
-    /**
-     * @return array|null
-     */
-    private function getLastStatsYearAndMonth() {
-        $files = glob(strtr($this->config['paths']['stats_json'], ['{year}' => '*']));
-        if(!$files) {
-            return null;
-        }
-
-        asort($files);
-        $lastStatsFilePath = end($files);
-        $lastYear = str_replace(explode('{year}', $this->config['paths']['stats_json']),
-            '', $lastStatsFilePath);
-
-        $stats = json_decode(file_get_contents($lastStatsFilePath), true);
-        end($stats);
-        $lastMonth = key($stats);
-
-        return [$lastYear, $lastMonth];
     }
 
     /**
      * @throws \Exception
      */
-    private function removeOldChartsIfNeed() {
-        foreach(glob(strtr($this->config['paths']['chart'], ['{number}' => '*', '{category}' => '*'])) as $file) {
+    private function removeOldChartsIfNeed($sourceAlias) {
+        $files = glob($this->getChartPath($sourceAlias, '*', '*'));
+        foreach($files as $file) {
             if(!unlink($file)) {
                 throw new \Exception("Remove old chart failed: {$file}");
             }
         }
     }
 
-    private function generateBarChart($number, $category, $techsStats, $width = 600, $height = null) {
+    private function generateBarChart($sourceAlias, $chartNumber, $category, $techsStats, $width = 600, $height = null) {
         $height = $height ?? (count($techsStats) * 40) + 50;
         $height = $height < 100 ? 100 : $height;
 
@@ -146,9 +129,26 @@ class GenCharts extends Command
         $image->drawScale(["CycleBackground"=>TRUE,"DrawSubTicks"=>false,"GridR"=>0,"GridG"=>0,"GridB"=>0,"GridAlpha"=>10,"Pos"=>SCALE_POS_TOPBOTTOM,"Mode"=>SCALE_MODE_START0]);
         $image->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
         $image->drawBarChart();
-        $image->autoOutput(strtr($this->config['paths']['chart'], [
-            '{number}' => $number,
-            '{category}' => \Behat\Transliterator\Transliterator::transliterate($category)
-        ]));
+
+        $chartPath = $this->getChartPath($sourceAlias, $chartNumber,
+            \Behat\Transliterator\Transliterator::transliterate($category));
+        $chartDirPath = pathinfo($chartPath, PATHINFO_DIRNAME);
+        if (!is_dir($chartDirPath)) {
+            mkdir($chartDirPath, 0777, true);
+        }
+
+        $image->autoOutput($chartPath);
+    }
+
+    private function getChartPath($sourceAlias, $chartNumber, $category) {
+        $chartPath = strtr($this->config['paths']['chart'], [
+            '{source}' => $sourceAlias,
+            '{year}' => $this->year,
+            '{month}' => $this->month,
+            '{number}' => $chartNumber,
+            '{category}' => $category,
+        ]);
+
+        return $chartPath;
     }
 }

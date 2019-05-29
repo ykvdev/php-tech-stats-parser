@@ -1,6 +1,6 @@
 <?php
 
-namespace app\commands\GetStatsHh;
+namespace app\commands\GetStats;
 
 class IgnoredWords
 {
