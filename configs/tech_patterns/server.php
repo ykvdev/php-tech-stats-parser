@@ -17,4 +17,20 @@ return [
         'VMware' => 'vm.{0,1}ware',
         'Parallels Desktop' => 'parallels',
     ],
+
+    'Кеширование' => [
+        'APC' => 'apc',
+        'XCache' => 'xcache',
+        'Varnish' => 'varnish',
+        'Memcache' => 'memcache',
+    ],
+
+    'Логирование и мониторинг' => [
+        'Munin' => 'munin',
+        'Graylog' => 'gray.{0,1}log',
+        'Grafana' => 'grafana',
+        'Logstash' => 'log.{0,1}stash',
+        'logrotate' => 'logrotate',
+        'Cacti' => 'cacti|cacty',
+    ],
 ];

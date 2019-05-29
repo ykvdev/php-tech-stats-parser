@@ -53,7 +53,7 @@ return [
 
     'PHP тестирование' => [
         'Selenium' => 'selenium|селениум',
-        'PHP Unit' => 'php.{0,1}unit',
+        'PHPUnit' => 'php.{0,1}unit',
         'Codeception' => 'code.{0,1}ception',
         'Behat' => 'behat',
         'PhpSpec' => 'php.{0,1}spec',
@@ -67,15 +67,10 @@ return [
         'Blade' => 'blade',
     ],
 
-    'PHP ORM' => [
+    'PHP DB ORM' => [
         'Propel' => 'propel',
         'Doctrine' => 'doctrine',
         'RedBeanPHP' => 'red.{0,1}bean',
-    ],
-
-    'PHP менеджеры пакетов' => [
-        'Composer' => 'composer',
-        'PEAR' => 'pear',
     ],
 
     'PHP профилирование и отладка' => [
@@ -94,5 +89,7 @@ return [
         'SOAP' => 'soap',
         'REST' => 'rest',
         'phpDoc' => 'php.{0,1}doc',
+        'Composer' => 'composer',
+        'PEAR' => 'pear',
     ],
 ];

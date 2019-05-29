@@ -10,13 +10,10 @@ return [
         'Firebird' => 'firebird',
     ],
 
-    'Документо-ориентированные СУБД' => [
+    'NoSQL СУБД' => [
         'MongoDB' => 'mongo',
         'RethinkDB' => 'rethink.{0,1}db',
         'CouchDB' => 'couch.{0,1}db',
-    ],
-
-    'Графовые СУБД' => [
         'AllegroGraph' => 'allegro.{0,1}graph',
         'ArangoDB' => 'arango',
         'FlockDB' => 'flock',
@@ -30,15 +27,9 @@ return [
         'Sqrrl' => 'sqrrl',
         'Titan' => 'titan',
         'Datomic' => 'datomic',
-    ],
-
-    'Ключ-значение СУБД' => [
         'Redis' => 'redis',
         'Tarantool' => 'tarantool',
         'Riak' => 'riak',
-    ],
-
-    'Гибридные NoSQL СУБД' => [
         'Cassandra' => 'cassandra',
         'HBase' => 'hbase',
     ],
@@ -57,21 +48,5 @@ return [
         'Lucene' => 'lucene',
         'Solr' => 'solr',
         'ElasticSearch' => 'elastic.{0,1}search',
-    ],
-
-    'Кеширование' => [
-        'APC' => 'apc',
-        'XCache' => 'xcache',
-        'Varnish' => 'varnish',
-        'Memcache' => 'memcache',
-    ],
-
-    'Логирование и мониторинг' => [
-        'Munin' => 'munin',
-        'Graylog' => 'gray.{0,1}log',
-        'Grafana' => 'grafana',
-        'Logstash' => 'log.{0,1}stash',
-        'logrotate' => 'logrotate',
-        'Cacti' => 'cacti|cacty',
     ],
 ];
