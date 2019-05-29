@@ -33,7 +33,7 @@ class Output
      * @param string $msg
      */
     public function info($msg) {
-        $msg = date('Y-m-d H:i:s') . ' [INFO] ' . $msg;
+        $msg = date('Y-m-d H:i:s ') . $msg;
         $this->output->writeln($msg);
         $this->toLog($msg);
     }
@@ -42,7 +42,7 @@ class Output
      * @param string $msg
      */
     public function error($msg) {
-        $msg = date('Y-m-d H:i:s') . ' [ERROR] ' . $msg;
+        $msg = date('Y-m-d H:i:s') . ' ERROR: ' . $msg;
         $this->output->writeln("<error>{$msg}</error>");
         $this->toLog($msg);
     }
