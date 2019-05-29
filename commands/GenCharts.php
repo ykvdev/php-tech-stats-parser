@@ -58,11 +58,11 @@ class GenCharts extends Command
             $this->output->info("Begin generate charts by {$year} year and {$month} month");
             $chartNumber = 1;
             foreach ($stats[$month] as $category => $techsStats) {
-                $this->output->info("Generate bar chart for category \"{$category}\"");
+                $this->output->info("Generate chart for category \"{$category}\"");
                 $this->generateBarChart($chartNumber++, $category, $techsStats);
             }
 
-            $this->output->info("Begin generate common chart by {$year} year and {$month} month");
+            $this->output->info('Generate common chart');
             $commonStats = array_merge(...array_values($stats[$month]));
             $hitsSum = array_sum($commonStats);
             $averageHit = $hitsSum / count($commonStats);
