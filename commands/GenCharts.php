@@ -72,7 +72,7 @@ class GenCharts extends Command
                 }
             }
             arsort($commonStats);
-            $this->generateBarChart($chartNumber, 'Общее', $commonStats, 600, 1000);
+            $this->generateBarChart($chartNumber, 'Общее', $commonStats);
         } catch (\Exception $e) {
             $this->output->error('(' . get_class($e) . ') ' . $e->getMessage());
         }
@@ -125,7 +125,10 @@ class GenCharts extends Command
         }
     }
 
-    private function generateBarChart($number, $category, $techsStats, $width = 600, $height = 500) {
+    private function generateBarChart($number, $category, $techsStats, $width = 600, $height = null) {
+        $height = $height ?? (count($techsStats) * 40) + 50;
+        $height = $height < 100 ? 100 : $height;
+
         $data = new Data();
         $data->addPoints(array_values($techsStats), 'hits');
         $data->setPalette('hits', ['R' => 224, 'G' => 100, 'B' => 46]);
