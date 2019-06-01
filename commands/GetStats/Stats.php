@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace app\commands\GetStats;
 
@@ -17,15 +17,18 @@ class Stats
      * @param array $patterns
      * @param string $statsJsonPath
      */
-    public function __construct(array $patterns, $statsJsonPath) {
+    public function __construct(array $patterns, string $statsJsonPath)
+    {
         $this->patterns = $patterns;
         $this->statsJsonPath = $statsJsonPath;
     }
 
     /**
      * @param string $text
+     * @param string $sourceAlias
      */
-    public function parseFromVacancyText(&$text, $sourceAlias) {
+    public function parseFromVacancyText(string &$text, string $sourceAlias): void
+    {
         $vacancyTechs = [];
         foreach($this->patterns as $category => $techs) {
             foreach($techs as $tech => $pattern) {
@@ -40,7 +43,8 @@ class Stats
         }
     }
 
-    public function sort(string $sourceAlias) {
+    public function sort(string $sourceAlias): void
+    {
         $sortedStats = [];
         foreach (array_keys($this->patterns) as $category) {
             if (isset($this->stats[$sourceAlias][date('n')][$category])) {
@@ -53,9 +57,10 @@ class Stats
     }
 
     /**
-     * @throws \Exception
+     * @throws \RuntimeException
      */
-    public function save() {
+    public function save(): void
+    {
         $statsFilePath = strtr($this->statsJsonPath, ['{year}' => date('Y')]);
         $statsData = file_exists($statsFilePath) ? json_decode(file_get_contents($statsFilePath), true) : [];
 
@@ -66,7 +71,7 @@ class Stats
         }
 
         if(file_put_contents($statsFilePath, json_encode($statsData)) === false) {
-            throw new \Exception('Save stats failed');
+            throw new \RuntimeException('Save stats failed');
         }
     }
 }

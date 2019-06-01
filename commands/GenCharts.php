@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace app\commands;
 
@@ -28,7 +28,8 @@ class GenCharts extends Command
     /** @var int */
     private $month;
 
-    protected function configure() {
+    protected function configure(): void
+    {
         $this->setName('gen-charts')
             ->setDescription('Generate charts by statistics file');
 
@@ -43,7 +44,8 @@ class GenCharts extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function initialize(InputInterface $input, OutputInterface $output) {
+    protected function initialize(InputInterface $input, OutputInterface $output): void
+    {
         $this->config = require APP_ROOT_PATH . '/configs/common.php';
 
         $this->output = new Output($output);
@@ -53,11 +55,12 @@ class GenCharts extends Command
         $this->month = $this->input->getOption('month');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         try {
             $statsFilePath = strtr($this->config['paths']['stats_json'], ['{year}' => $this->year]);
             if (!file_exists($statsFilePath)) {
-                throw new \Exception("Stats file for {$this->year} year not found");
+                throw new \RuntimeException("Stats file for {$this->year} year not found");
             }
             $stats = json_decode(file_get_contents($statsFilePath), true);
 
@@ -87,7 +90,7 @@ class GenCharts extends Command
                 arsort($commonStats);
                 $this->generateBarChart($sourceAlias, $chartNumber, 'Общее', $commonStats);
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->output->error(
                 PHP_EOL . '(' . get_class($e) . ') '
                 . $e->getMessage()
@@ -97,18 +100,23 @@ class GenCharts extends Command
     }
 
     /**
-     * @throws \Exception
+     * @param string $sourceAlias
+     *
+     * @throws \RuntimeException
      */
-    private function removeOldChartsIfNeed($sourceAlias) {
+    private function removeOldChartsIfNeed(string $sourceAlias): void
+    {
         $files = glob($this->getChartPath($sourceAlias, '*', '*'));
         foreach($files as $file) {
             if(!unlink($file)) {
-                throw new \Exception("Remove old chart failed: {$file}");
+                throw new \RuntimeException("Remove old chart failed: {$file}");
             }
         }
     }
 
-    private function generateBarChart($sourceAlias, $chartNumber, $category, $techsStats, $width = 600, $height = null) {
+    private function generateBarChart(string $sourceAlias, int $chartNumber, string $category, array $techsStats,
+    int $width = 600, ?int $height = null): void
+    {
         $height = $height ?? (count($techsStats) * 40) + 50;
         $height = $height < 100 ? 100 : $height;
 
@@ -140,7 +148,8 @@ class GenCharts extends Command
         $image->autoOutput($chartPath);
     }
 
-    private function getChartPath($sourceAlias, $chartNumber, $category) {
+    private function getChartPath(string $sourceAlias, $chartNumber, string $category): string
+    {
         $chartPath = strtr($this->config['paths']['chart'], [
             '{source}' => $sourceAlias,
             '{year}' => $this->year,

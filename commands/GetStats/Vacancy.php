@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace app\commands\GetStats;
 
@@ -17,7 +17,8 @@ class Vacancy
         $this->output = $output;
     }
 
-    public function getUrlsList(string $pagesUrl, int $pageNumber, string $vacancyUrlsSelector) {
+    public function getUrlsList(string $pagesUrl, int $pageNumber, string $vacancyUrlsSelector): array
+    {
         $urls = [];
 
         $this->output->info('Begin parsing vacancy urls');
@@ -64,7 +65,8 @@ class Vacancy
         return $url;
     }
 
-    public function getTextByUrl($url, string $vacancyTextSelector) {
+    public function getTextByUrl(string $url, string $vacancyTextSelector): ?string
+    {
         $this->output->toLog('Parsing vacancy ' . $url);
         $html = (new Client(['http_errors' => false]))->request('GET', $url)->getBody()->getContents();
         $html = $this->normalizeHtml($html);

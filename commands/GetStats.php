@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace app\commands;
 
@@ -28,7 +28,8 @@ class GetStats extends Command
     /** @var IgnoredWords */
     private $ignoredWords;
 
-    protected function configure() {
+    protected function configure(): void
+    {
         $this->setName('get-stats')
             ->setDescription('Get tech stats');
     }
@@ -37,7 +38,8 @@ class GetStats extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function initialize(InputInterface $input, OutputInterface $output) {
+    protected function initialize(InputInterface $input, OutputInterface $output): void
+    {
         $this->config = require APP_ROOT_PATH . '/configs/common.php';
         $this->output = new Output($output, $this->config['paths']['get_stats_output_log']);
         $this->vacancy = new Vacancy($this->output);
@@ -45,7 +47,8 @@ class GetStats extends Command
         $this->ignoredWords = new IgnoredWords($this->config['paths']['last_ignored_words']);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         try {
             foreach ($this->config['sources'] as $sourceAlias => $sourceConfig) {
                 $this->output->info('Begin parsing source ' . $sourceAlias);
@@ -75,7 +78,7 @@ class GetStats extends Command
             $this->stats->save();
             $this->ignoredWords->save();
             $this->output->info('Save stats and ignored words finished');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->output->error(
                 PHP_EOL . '(' . get_class($e) . ') '
                 . $e->getMessage()
