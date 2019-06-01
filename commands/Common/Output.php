@@ -51,18 +51,18 @@ class Output
         $this->output->write(PHP_EOL);
     }
 
-    private function removeOldLogIfNeed() {
-        if($this->outputLogPath && file_exists($this->outputLogPath)) {
-            unlink($this->outputLogPath);
-        }
-    }
-
     /**
      * @param string $msg
      */
-    private function toLog($msg) {
+    public function toLog($msg) {
         if($this->outputLogPath) {
             file_put_contents($this->outputLogPath, $msg . PHP_EOL, FILE_APPEND);
+        }
+    }
+
+    private function removeOldLogIfNeed() {
+        if($this->outputLogPath && file_exists($this->outputLogPath)) {
+            unlink($this->outputLogPath);
         }
     }
 }
