@@ -40,7 +40,7 @@ class GetStats extends Command
     protected function initialize(InputInterface $input, OutputInterface $output) {
         $this->config = require APP_ROOT_PATH . '/configs/common.php';
         $this->output = new Output($output, $this->config['paths']['get_stats_output_log']);
-        $this->vacancy = new Vacancy;
+        $this->vacancy = new Vacancy($this->output);
         $this->stats = new Stats($this->config['tech_patterns'], $this->config['paths']['stats_json']);
         $this->ignoredWords = new IgnoredWords($this->config['paths']['last_ignored_words']);
     }
@@ -49,22 +49,21 @@ class GetStats extends Command
         try {
             foreach ($this->config['sources'] as $sourceAlias => $sourceConfig) {
                 $this->output->info('Begin parsing source ' . $sourceAlias);
-                $this->output->info('Begin parsing vacancy urls');
-                $urls = $this->vacancy->getUrlsList($sourceConfig['pages_url'], $sourceConfig['vacancy_urls_selector']);
-                $countVacancies = count($urls);
-                $this->output->info("Received vacancies number: {$countVacancies}");
+                $urls = $this->vacancy->getUrlsList(
+                    $sourceConfig['pages_url'],
+                    $sourceConfig['first_page_number'],
+                    $sourceConfig['vacancy_urls_selector']
+                );
 
                 $this->output->info('Begin parsing vacancy stats');
-                $progress = new ProgressBar($this->output->getOutput(), $countVacancies);
+                $progress = new ProgressBar($this->output->getOutput(), count($urls));
                 $progress->start();
                 foreach ($urls as $url) {
-                    $text = $this->vacancy->getTextByUrl(
-                        $url,
-                        $sourceConfig['vacancy_title_selector'],
-                        $sourceConfig['vacancy_text_selector']
-                    );
-                    $this->stats->parseFromVacancyText($text, $sourceAlias);
-                    $this->ignoredWords->parseFromVacancyText($text);
+                    $text = $this->vacancy->getTextByUrl($url, $sourceConfig['vacancy_text_selector']);
+                    if($text) {
+                        $this->stats->parseFromVacancyText($text, $sourceAlias);
+                        $this->ignoredWords->parseFromVacancyText($text);
+                    }
 
                     $progress->advance();
                 }
