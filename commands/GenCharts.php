@@ -28,6 +28,13 @@ class GenCharts extends Command
     /** @var int */
     private $month;
 
+    public function __construct(array $config)
+    {
+        $this->config = $config;
+
+        parent::__construct();
+    }
+
     protected function configure(): void
     {
         $this->setName('gen-charts')
@@ -46,8 +53,6 @@ class GenCharts extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
-        $this->config = require APP_ROOT_PATH . '/configs/common.php';
-
         $this->output = new Output($output);
         $this->input = $input;
 

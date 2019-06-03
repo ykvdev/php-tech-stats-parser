@@ -2,6 +2,10 @@
 
 namespace app\commands\GetStats;
 
+/**
+ * Class Stats
+ * @package app\commands\GetStats
+ */
 class Stats
 {
     /** @var array */
@@ -43,6 +47,9 @@ class Stats
         }
     }
 
+    /**
+     * @param string $sourceAlias
+     */
     public function sort(string $sourceAlias): void
     {
         $sortedStats = [];

@@ -28,6 +28,13 @@ class GetStats extends Command
     /** @var IgnoredWords */
     private $ignoredWords;
 
+    public function __construct(array $config)
+    {
+        $this->config = $config;
+
+        parent::__construct();
+    }
+
     protected function configure(): void
     {
         $this->setName('get-stats')
@@ -40,7 +47,6 @@ class GetStats extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
-        $this->config = require APP_ROOT_PATH . '/configs/common.php';
         $this->output = new Output($output, $this->config['paths']['get_stats_output_log']);
         $this->vacancy = new Vacancy($this->output);
         $this->stats = new Stats($this->config['tech_patterns'], $this->config['paths']['stats_json']);
