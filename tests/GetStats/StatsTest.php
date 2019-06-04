@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace app\tests;
+namespace app\tests\GetStats;
 
 use app\commands\GetStats\Stats;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ class StatsTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->config = require __DIR__ . '/../configs/common.php';
+        $this->config = require __DIR__ . '/../../configs/common.php';
         $this->config['paths']['stats_json'] = sys_get_temp_dir() . '/' . uniqid() . '_stats.json';
 
         $this->stats = new Stats($this->config['tech_patterns'], $this->config['paths']['stats_json']);
