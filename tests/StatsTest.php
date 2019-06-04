@@ -21,7 +21,7 @@ class StatsTest extends TestCase
         $this->stats = new Stats($this->config['tech_patterns'], $this->config['paths']['stats_json']);
     }
 
-    public function testParseFromVacancyText()
+    public function testParseFromVacancyText(): void
     {
         $text = 'Some text symfony yii2 Laravel 5.1';
         $this->stats->parseFromVacancyText($text, 'some_source');
@@ -36,7 +36,7 @@ class StatsTest extends TestCase
         $this->assertEquals(1, $parsedStats['some_source'][date('n')]['PHP фреймворки']['Symfony']);
     }
 
-    public function testSort()
+    public function testSort(): void
     {
         $statsProp = new \ReflectionProperty(Stats::class, 'stats');
         $statsProp->setAccessible(true);
@@ -67,7 +67,7 @@ class StatsTest extends TestCase
         $this->assertEquals('Drupal', array_key_last($sortedStats['some_source'][$currMonth]['PHP CMS']));
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $statsProp = new \ReflectionProperty(Stats::class, 'stats');
         $statsProp->setAccessible(true);
