@@ -2,75 +2,45 @@
 
 namespace app\commands\GetStats;
 
-use app\commands\Common\Output;
 use GuzzleHttp\Client;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Vacancy
 {
-    /** @var Output */
-    private $output;
-
-    public function __construct(Output $output)
+    public function getUrlsListFromPage(string $pageUrl, string $vacancyUrlsSelector): ?array
     {
-        $this->output = $output;
-    }
-
-    public function getUrlsList(string $pagesUrl, int $pageNumber, string $vacancyUrlsSelector): array
-    {
-        $urls = [];
-
-        $this->output->info('Begin parsing vacancy urls');
-        $progress = new ProgressBar($this->output->getOutput());
-        $progress->start();
-        while(true) {
-            $url = strtr($pagesUrl, ['{pageNumber}' => $pageNumber]);
-            $html = $this->httpRequest($url);
-            if(!$html) {
-                break;
-            }
-
-            $lastReceivedUrlsNumber = 0;
-            (new Crawler($html))
-                ->filter($vacancyUrlsSelector)
-                ->each(function(Crawler $node, $i) use(&$urls, $pagesUrl, $progress, &$lastReceivedUrlsNumber) {
-                    $url = $node->attr('href');
-                    if (substr($url, 0, 1) == '/') {
-                        $url = parse_url($pagesUrl, PHP_URL_HOST) . $url;
-                    }
-
-                    if(!in_array($url, $urls)) {
-                        $urls[] = $url;
-                        $lastReceivedUrlsNumber++;
-                        $progress->advance();
-                    }
-                });
-            if(!$lastReceivedUrlsNumber) {
-                break;
-            }
-
-            $pageNumber++;
+        if(!($html = $this->httpRequest($pageUrl))) {
+            return null;
         }
-        $progress->finish();
-        $this->output->eol();
-        $this->output->info('Received vacancies number: ' . count($urls));
 
-        return $urls;
+        $vacancyUrls = [];
+        (new Crawler($html))
+            ->filter($vacancyUrlsSelector)
+            ->each(function(Crawler $node, $i) use(&$vacancyUrls, $pageUrl) {
+                $vacancyUrl = $node->attr('href');
+                if (substr($vacancyUrl, 0, 1) == '/') {
+                    $vacancyUrl = parse_url($pageUrl, PHP_URL_HOST) . $vacancyUrl;
+                }
+
+                if(!in_array($vacancyUrl, $vacancyUrls)) {
+                    $vacancyUrls[] = $vacancyUrl;
+                }
+            });
+
+        return $vacancyUrls;
     }
 
     public function getTextByUrl(string $url, string $vacancyTextSelector): ?string
     {
-        $this->output->toLog('Parsing vacancy ' . $url);
-        $html = $this->httpRequest($url);
-        $crawler = (new Crawler($html))->filter($vacancyTextSelector);
-        if(!$crawler->count() || !($text = $crawler->text())) {
-            $this->output->eol();
-            $this->output->error("Get vacancy data failed ({$url})");
-
+        if(!($html = $this->httpRequest($url))) {
             return null;
-        } else {
+        }
+
+        $crawler = (new Crawler($html))->filter($vacancyTextSelector);
+        if($crawler->count() && ($text = $crawler->text())) {
             return $text;
+        } else {
+            return null;
         }
     }
 
