@@ -26,17 +26,20 @@ class Vacancy
         $progress->start();
         while(true) {
             $url = strtr($pagesUrl, ['{pageNumber}' => $pageNumber]);
-            $response = (new Client(['http_errors' => false]))->request('GET', $url);
-            if($response->getStatusCode() == 404) {
+            $html = $this->httpRequest($url);
+            if(!$html) {
                 break;
             }
 
-            $html = $response->getBody()->getContents();
             $lastReceivedUrlsNumber = 0;
             (new Crawler($html))
                 ->filter($vacancyUrlsSelector)
                 ->each(function(Crawler $node, $i) use(&$urls, $pagesUrl, $progress, &$lastReceivedUrlsNumber) {
-                    $url = $this->normalizeUrlIfNeed($node->attr('href'), $pagesUrl);
+                    $url = $node->attr('href');
+                    if (substr($url, 0, 1) == '/') {
+                        $url = parse_url($pagesUrl, PHP_URL_HOST) . $url;
+                    }
+
                     if(!in_array($url, $urls)) {
                         $urls[] = $url;
                         $lastReceivedUrlsNumber++;
@@ -56,20 +59,10 @@ class Vacancy
         return $urls;
     }
 
-    private function normalizeUrlIfNeed(string $url, string $pagesUrl): string
-    {
-        if (substr($url, 0, 1) == '/') {
-            $url = parse_url($pagesUrl, PHP_URL_HOST) . $url;
-        }
-
-        return $url;
-    }
-
     public function getTextByUrl(string $url, string $vacancyTextSelector): ?string
     {
         $this->output->toLog('Parsing vacancy ' . $url);
-        $html = (new Client(['http_errors' => false]))->request('GET', $url)->getBody()->getContents();
-        $html = $this->normalizeHtml($html);
+        $html = $this->httpRequest($url);
         $crawler = (new Crawler($html))->filter($vacancyTextSelector);
         if(!$crawler->count() || !($text = $crawler->text())) {
             $this->output->eol();
@@ -81,8 +74,16 @@ class Vacancy
         }
     }
 
-    private function normalizeHtml(string $html): string
+    private function httpRequest(string $url): ?string
     {
-        return str_replace('<!DOCTYPE html>', '', $html);
+        $response = (new Client(['http_errors' => false]))->request('GET', $url);
+        if($response->getStatusCode() == 404) {
+            return null;
+        }
+
+        $html = $response->getBody()->getContents();
+        $html = str_replace('<!DOCTYPE html>', '', $html);
+
+        return $html;
     }
 }
