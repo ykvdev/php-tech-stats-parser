@@ -76,32 +76,40 @@ class GenCharts extends Command
                     continue;
                 }
 
-                $chartNumber = 1;
-                $this->removeOldChartsIfNeed($sourceAlias);
-                foreach ($sourceStats[$this->month] as $category => $techsStats) {
-                    $this->output->info("Generate chart for {$sourceAlias} - {$category}");
-                    $this->generateBarChart($sourceAlias, $chartNumber++, $category, $techsStats);
-                }
-
-                $this->output->info('Generate common chart');
-                $commonStats = array_merge(...array_values($sourceStats[$this->month]));
-                $hitsSum = array_sum($commonStats);
-                $averageHit = $hitsSum / count($commonStats);
-                foreach ($commonStats as $techName => $techHits) {
-                    if ($techHits < $averageHit) {
-                        unset($commonStats[$techName]);
-                    }
-                }
-                arsort($commonStats);
-                $this->generateBarChart($sourceAlias, $chartNumber, 'Общее', $commonStats);
+                $this->genCatsCharts($sourceAlias, $sourceStats);
+                $this->genCommonChart($sourceAlias, $sourceStats);
             }
         } catch (\Throwable $e) {
             $this->output->error(
-                PHP_EOL . '(' . get_class($e) . ') '
-                . $e->getMessage()
+                PHP_EOL . '(' . get_class($e) . ') ' . $e->getMessage()
                 . PHP_EOL . $e->getTraceAsString()
             );
         }
+    }
+
+    private function genCatsCharts(string $sourceAlias, array $sourceStats): void
+    {
+        $chartNumber = 1;
+        $this->removeOldChartsIfNeed($sourceAlias);
+        foreach ($sourceStats[$this->month] as $category => $techsStats) {
+            $this->output->info("Generate chart for {$sourceAlias} - {$category}");
+            $this->generateBarChart($sourceAlias, $chartNumber++, $category, $techsStats);
+        }
+    }
+
+    private function genCommonChart(string $sourceAlias, array $sourceStats): void
+    {
+        $this->output->info("Generate common chart for {$sourceAlias}");
+        $commonStats = array_merge(...array_values($sourceStats[$this->month]));
+        $hitsSum = array_sum($commonStats);
+        $averageHit = $hitsSum / count($commonStats);
+        foreach ($commonStats as $techName => $techHits) {
+            if ($techHits < $averageHit) {
+                unset($commonStats[$techName]);
+            }
+        }
+        arsort($commonStats);
+        $this->generateBarChart($sourceAlias, 0, 'Общее', $commonStats);
     }
 
     /**
