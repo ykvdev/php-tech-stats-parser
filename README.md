@@ -1,8 +1,8 @@
-# Description
+## Description
 
 This project allows to receive PHP technologies hits statistics from vacancies for "PHP" keyword. Also allows to generate graphical charts for visually view of received statistics.
 
-# Usage
+## Usage
 
 Follow next steps:
 
