@@ -7,6 +7,14 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Vacancy
 {
+    /** @var Client */
+    private $guzzleHttpClient;
+
+    public function __construct()
+    {
+        $this->guzzleHttpClient = new Client(['http_errors' => false]);
+    }
+
     public function getUrlsListFromPage(string $pageUrl, string $vacancyUrlsSelector): ?array
     {
         if(!($html = $this->httpRequest($pageUrl))) {
@@ -46,7 +54,7 @@ class Vacancy
 
     private function httpRequest(string $url): ?string
     {
-        $response = (new Client(['http_errors' => false]))->request('GET', $url);
+        $response = $this->guzzleHttpClient->request('GET', $url);
         if($response->getStatusCode() == 404) {
             return null;
         }
