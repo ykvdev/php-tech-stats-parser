@@ -2,10 +2,10 @@
 
 return [
     'paths' => [
-        'get_stats_output_log' => APP_ROOT_PATH . '/results/get_stats_output.log',
-        'stats_json' => APP_ROOT_PATH . '/results/stats_{year}.json',
-        'last_ignored_words' => APP_ROOT_PATH . '/results/last_ignored_words.txt',
-        'chart' => APP_ROOT_PATH . '/results/charts/{source}/{year}/{month}/{number}-{category}.png',
+        'get_stats_output_log' => __DIR__ . '/../results/get_stats_output.log',
+        'stats_json' => __DIR__ . '/../results/stats_{year}.json',
+        'last_ignored_words' => __DIR__ . '/../results/last_ignored_words.txt',
+        'chart' => __DIR__ . '/../results/charts/{source}/{year}/{month}/{number}-{category}.png',
     ],
 
     'sources' => [
