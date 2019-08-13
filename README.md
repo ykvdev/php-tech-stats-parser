@@ -11,3 +11,5 @@ Follow next steps:
 1. Run `$ ./run get-stats` for receive statistics.
 1. Run `$ ./run gen-charts` for generate charts by received statistics.
 1. Go to `results` directory and see the results.
+
+See example results: http://atoumus.github.io/php-tech-ratings.html
